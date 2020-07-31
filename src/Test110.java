@@ -1,4 +1,4 @@
-public class test110 {
+public class Test110 {
     public boolean isBalanced(TreeNode root) {
         return helper(root)>=0;
     }

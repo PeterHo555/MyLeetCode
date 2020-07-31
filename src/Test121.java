@@ -1,4 +1,4 @@
-public class test121 {
+public class Test121 {
     public int maxProfit(int[] prices) {
         int ans = 0;
         //暴力法

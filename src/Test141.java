@@ -1,7 +1,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class test141 {
+public class Test141 {
     public boolean hasCycle(ListNode head) {
         HashSet<ListNode> nodesSeen = new HashSet<>();
         while (head != null) {

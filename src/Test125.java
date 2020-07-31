@@ -1,4 +1,4 @@
-public class test125 {
+public class Test125 {
     public boolean isPalindrome(String s) {
         //除去特殊符号，并转小写
         StringBuffer sNew = new StringBuffer();

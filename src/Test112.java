@@ -1,4 +1,4 @@
-public class test112 {
+public class Test112 {
     public boolean hasPathSum(TreeNode root, int sum) {
         //是否为空树
         if (root == null) return false;

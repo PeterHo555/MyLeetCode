@@ -1,16 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class test118 {
-    public List<List<Integer>> generate(int numRows) {
-        //curList[j]==lastList[j]+lastList[j-1]
+public class Test119 {
+    public List<Integer> getRow(int rowIndex) {
+        //小改杨辉三角1的代码
         List<List<Integer>> ansList = new ArrayList<>();
-        if (numRows == 0) return ansList;
         List<Integer> lastList = new ArrayList<>();
         lastList.add(1);
+        if (rowIndex == 0) return lastList;
         ansList.add(lastList);
         System.out.println(ansList);
-        for (int i = 1; i < numRows; i++) {
+        for (int i = 1; i <= rowIndex; i++) {
             List<Integer> curList = new ArrayList<>();
             for (int j = 0; j <= i; j++) {
                 if (j==0 || j==i){
@@ -19,11 +19,9 @@ public class test118 {
                     curList.add(lastList.get(j)+lastList.get(j-1));
                 }
             }
-            System.out.println(curList);
             ansList.add(curList);
             lastList = curList;
         }
-        return ansList;
+        return ansList.get(rowIndex);
     }
-
 }

@@ -1,4 +1,4 @@
-public class test111 {
+public class Test111 {
     public int minDepth(TreeNode root) {
         if (root == null) return 0;
         if (root.left == null && root.right == null) return 1;

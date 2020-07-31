@@ -1,4 +1,4 @@
-public class test124 {
+public class Test124 {
     int max = Integer.MIN_VALUE;
     public int maxPathSum(TreeNode root) {
         if (root == null) {

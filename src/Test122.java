@@ -1,4 +1,4 @@
-public class test122 {
+public class Test122 {
     public int maxProfit(int[] prices) {
         //把问题看作每天都对股票买卖，有利益就在总数上累加
         int sum = 0;
