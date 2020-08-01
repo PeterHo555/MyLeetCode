@@ -15,9 +15,12 @@ public class FuntionTest {
 //        Test1403 test1403 = new Test1403();
 //        int[] testArr = {6};
 //        System.out.println(test1403.minSubsequence(testArr));
-        Test1029 test1029 = new Test1029();
-        int[][] costs = {{10,20},{30,200},{400,50},{30,20}};
-        test1029.twoCitySchedCost(costs);
+//        Test1029 test1029 = new Test1029();
+//        int[][] costs = {{10,20},{30,200},{400,50},{30,20}};
+//        test1029.twoCitySchedCost(costs);
+        Test1005 test1005 = new Test1005();
+        int[] test = {4,2,3};
+        System.out.println(test1005.largestSumAfterKNegations(test, 1));
 
     }
 
