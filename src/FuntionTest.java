@@ -8,10 +8,17 @@ public class FuntionTest {
 //        System.out.println(n);
 //        n >>>= 1;
 //        System.out.println(n);
-        String s = "ai";
-        Test345 test345_ = new Test345();
-        String ans = test345_.reverseVowels(s);
-        System.out.println(ans);
+//        String s = "ai";
+//        Test345 test345_ = new Test345();
+//        String ans = test345_.reverseVowels(s);
+//        System.out.println(ans);
+//        Test1403 test1403 = new Test1403();
+//        int[] testArr = {6};
+//        System.out.println(test1403.minSubsequence(testArr));
+        Test1029 test1029 = new Test1029();
+        int[][] costs = {{10,20},{30,200},{400,50},{30,20}};
+        test1029.twoCitySchedCost(costs);
+
     }
 
 }
