@@ -21,10 +21,16 @@ public class FuntionTest {
 //        Test1005 test1005 = new Test1005();
 //        int[] test = {4,2,3};
 //        System.out.println(test1005.largestSumAfterKNegations(test, 1));
-        int[] test1 = {4,-1,4,-2,4};
-        int[][] test2 = {{2,4}};
-        Test874 test874 = new Test874();
-        System.out.println(test874.robotSim(test1,test2));
+//        int[] test1 = {4,-1,4,-2,4};
+//        int[][] test2 = {{2,4}};
+//        Test874 test874 = new Test874();
+//        System.out.println(test874.robotSim(test1,test2));
+//        String num1 = "54321789";
+//        int len = num1.length()-1;
+//        int ans = (int)num1.charAt(len);
+//        System.out.println(ans);
+        Test202 test202 = new Test202();
+        test202.isHappy(19);
     }
 
 }
