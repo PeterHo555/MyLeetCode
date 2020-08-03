@@ -29,8 +29,11 @@ public class FuntionTest {
 //        int len = num1.length()-1;
 //        int ans = (int)num1.charAt(len);
 //        System.out.println(ans);
-        Test202 test202 = new Test202();
-        test202.isHappy(19);
+//        Test202 test202 = new Test202();
+//        test202.isHappy(19);
+        Test1047 test1047 = new Test1047();
+
+        System.out.println(test1047.removeDuplicates("abbaca"));
     }
 
 }
