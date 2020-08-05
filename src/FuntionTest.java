@@ -31,9 +31,17 @@ public class FuntionTest {
 //        System.out.println(ans);
 //        Test202 test202 = new Test202();
 //        test202.isHappy(19);
-        Test1047 test1047 = new Test1047();
+//        Test1047 test1047 = new Test1047();
+//        System.out.println(test1047.removeDuplicates("abbaca"));
 
-        System.out.println(test1047.removeDuplicates("abbaca"));
+
+        Test19 test19 = new Test19();
+        ListNode listNode = new ListNode();
+        listNode.val = 1;
+        listNode.next = null;
+        test19.removeNthFromEnd(listNode,1);
+
+
     }
 
 }

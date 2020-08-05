@@ -8,7 +8,7 @@
 
 ### 链表
 
-1.找出两个链表的交点 --160
+1.找出两个链表的交点 --160--Easy
 
 ```java
 public class Solution {
@@ -30,23 +30,106 @@ public class Solution {
 
 
 
-2.链表反转
+2.链表反转--206--Easy
 
-3.归并两个有序的链表
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode preNode = null;
+        ListNode curNode = head;
+        //使用临时节点进行交换
+        while (curNode !=null){
+            ListNode tempNode = curNode.next;
+            curNode.next = preNode;
+            preNode = curNode;
+            curNode = tempNode;
+        }
+        return preNode;
+    }
+}
+```
 
-4.从有序链表中删除重复节点
 
-5.删除链表的倒数第 n 个节点
 
-6.交换链表中的相邻结点
+3.归并两个有序的链表--21--Easy
 
-7.链表求和
+```java
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null) {
+            return l2;
+        }
+        if(l2 == null) {
+            return l1;
+        }
+        //递归法解
+        if(l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+    }
+}
+```
 
-8.回文链表
 
-9.分隔链表
 
-10.链表元素按奇偶聚集
+4.从有序链表中删除重复节点--83--Easy
+
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode curNode = head;
+        while (curNode != null && curNode.next != null){
+            if(curNode.val == curNode.next.val){
+                curNode.next = curNode.next.next;
+                continue;
+            }
+            curNode = curNode.next;
+        }
+        return head;
+    }
+}
+```
+
+
+
+5.删除链表的倒数第 n 个节点--19--Medium
+
+```java
+//思路是先让一个指针先跑n步
+public class Test19 {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode node1 = head;
+        ListNode node2 = head;
+        for (int i = 0; i < n; i++) {
+            node1 = node1.next;
+        }
+        if (node1 == null)
+            return head.next;
+        while (node1.next != null){
+            node1 = node1.next;
+            node2 = node2.next;
+        }
+        node2.next = node2.next.next;
+        return head;
+    }
+}
+```
+
+
+
+6.交换链表中的相邻结点--24--Medium
+
+7.链表求和--445--Medium
+
+8.回文链表--234--Easy
+
+9.分隔链表--725--Medium
+
+10.链表元素按奇偶聚集--328--Medium
 
 ---
 
