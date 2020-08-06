@@ -35,12 +35,25 @@ public class FuntionTest {
 //        System.out.println(test1047.removeDuplicates("abbaca"));
 
 
-        Test19 test19 = new Test19();
-        ListNode listNode = new ListNode();
-        listNode.val = 1;
-        listNode.next = null;
-        test19.removeNthFromEnd(listNode,1);
-
+//        Test19 test19 = new Test19();
+//        ListNode listNode = new ListNode();
+//        listNode.val = 1;
+//        listNode.next = null;
+//        test19.removeNthFromEnd(listNode,1);
+        Test24 test24 = new Test24();
+        ListNode node1 = new ListNode(1);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(3);
+        ListNode node4 = new ListNode(4);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = null;
+        test24.swapPairs(node1);
+        while (node2 != null){
+            System.out.println(node2.val);
+            node2 = node2.next;
+        }
 
     }
 

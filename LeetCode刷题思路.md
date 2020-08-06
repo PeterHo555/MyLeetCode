@@ -1,6 +1,6 @@
 [toc]
 
-# Leetcode题解
+# Leetcode练习之PeterHo的刷题记录
 
 >本文从 Leetcode 中精选大概 200 左右的题目，去除了某些繁杂但是没有多少算法思想的题目，同时保留了面试中经常被问到的经典题目。
 
@@ -123,13 +123,133 @@ public class Test19 {
 
 6.交换链表中的相邻结点--24--Medium
 
+```java
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        // node1与node2为需要交换的节点，pre与next节点为这两个节点的前置与后置节点。
+        ListNode node1, node2, pre, next;
+        // 构造一个前置节点
+        ListNode node = new ListNode(-1);
+        node.next = head;
+        pre = node;
+        while (pre.next != null && pre.next.next != null) {
+            // 赋值node1，node2，next节点
+            node1 = pre.next;
+            node2 = pre.next.next;
+            next = node2.next;
+            // 交换节点
+            node1.next = next;
+            node2.next = node1;
+            pre.next = node2;
+            // 将前置节点替换为下一轮的前置节点
+            pre = node1;
+        }
+        return node.next;
+    }
+}
+```
+
+
+
 7.链表求和--445--Medium
+
+```java
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Stack<Integer> stack1 = buildStack(l1);
+        Stack<Integer> stack2 = buildStack(l2);
+        ListNode head = new ListNode(-1);
+        int carry = 0;
+        //计算栈顶元素相加的结果，判断是否需要进位
+        while (!stack1.isEmpty() || !stack2.isEmpty() || carry != 0) {
+            int x = stack1.isEmpty() ? 0 : stack1.pop();
+            int y = stack2.isEmpty() ? 0 : stack2.pop();
+            int sum = x + y + carry;
+            //链表前插法保留计算的每一位的值
+            ListNode node = new ListNode(sum % 10);
+            node.next = head.next;
+            head.next = node;
+            carry = sum / 10;
+        }
+        return head.next;
+    }
+    //用链表的元素构造栈
+    private Stack<Integer> buildStack(ListNode l) {
+        Stack<Integer> stack = new Stack<>();
+        while (l != null) {
+            stack.push(l.val);
+            l = l.next;
+        }
+        return stack;
+    }
+}
+```
+
+
 
 8.回文链表--234--Easy
 
+```java
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) return true;
+        // 用快慢指针确定链表的中点
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (fast != null) slow = slow.next;  // 偶数节点，让 slow 指向下一个节点
+        cut(head, slow);                     // 切成两个链表
+        return isEqual(head, reverse(slow));
+    }
+    //切断链表
+    private void cut(ListNode head, ListNode cutNode) {
+        while (head.next != cutNode) {
+            head = head.next;
+        }
+        head.next = null;
+    }
+    // 链表反转
+    private ListNode reverse(ListNode head) {
+        ListNode newHead = null;
+        while (head != null) {
+            ListNode nextNode = head.next;
+            head.next = newHead;
+            newHead = head;
+            head = nextNode;
+        }
+        return newHead;
+    }
+    //判断链表是否相等
+    private boolean isEqual(ListNode l1, ListNode l2) {
+        while (l1 != null && l2 != null) {
+            if (l1.val != l2.val) return false;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        return true;
+    }
+}
+```
+
+
+
 9.分隔链表--725--Medium
 
+```java
+
+```
+
+
+
 10.链表元素按奇偶聚集--328--Medium
+
+```java
+
+```
+
+
 
 ---
 
