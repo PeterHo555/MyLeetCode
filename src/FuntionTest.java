@@ -40,20 +40,44 @@ public class FuntionTest {
 //        listNode.val = 1;
 //        listNode.next = null;
 //        test19.removeNthFromEnd(listNode,1);
-        Test24 test24 = new Test24();
-        ListNode node1 = new ListNode(1);
-        ListNode node2 = new ListNode(2);
-        ListNode node3 = new ListNode(3);
-        ListNode node4 = new ListNode(4);
-        node1.next = node2;
-        node2.next = node3;
-        node3.next = node4;
-        node4.next = null;
-        test24.swapPairs(node1);
-        while (node2 != null){
-            System.out.println(node2.val);
-            node2 = node2.next;
-        }
+//        Test24 test24 = new Test24();
+//        ListNode node1 = new ListNode(1);
+//        ListNode node2 = new ListNode(2);
+//        ListNode node3 = new ListNode(3);
+//        ListNode node4 = new ListNode(4);
+//        node1.next = node2;
+//        node2.next = node3;
+//        node3.next = node4;
+//        node4.next = null;
+//        test24.swapPairs(node1);
+//        while (node2 != null){
+//            System.out.println(node2.val);
+//            node2 = node2.next;
+//        }
+//        int k = 5;
+//        ListNode[] ans = new ListNode[k];
+//        for (int i = 0; i < k; i++) {
+//            if (ans[i] == null) {
+//                System.out.println("null");
+//            }
+//        }
+//        Test739 test739 = new Test739();
+//        int[] T = {73, 74, 75, 71, 69, 72, 76, 73};
+//        int[] ans = test739.dailyTemperatures(T);
+////        for (int i = 0; i < ans.length; i++) {
+////            System.out.println(ans[i]);
+////        }
+//        int[] dist = new int[5];
+//        for (int i = 0; i < dist.length; i++) {
+//            System.out.println(dist[i]);
+//        }
+        int[] test = {1,2,4,3,1};
+        Test503 test503 = new Test503();
+        int[] ans = test503.nextGreaterElements(test);
+//        for (int i = 0; i < ans.length; i++) {
+//            System.out.println(ans[i]);
+//
+//        }
 
     }
 

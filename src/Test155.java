@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 public class Test155 {
     private Node head;
 
@@ -36,3 +38,37 @@ public class Test155 {
         }
     }
 }
+
+
+//class MinStack {
+//
+//    private Stack<Integer> dataStack;
+//    private Stack<Integer> minStack;
+//    private int min;
+//
+//    public MinStack() {
+//        dataStack = new Stack<>();
+//        minStack = new Stack<>();
+//        min = Integer.MAX_VALUE;
+//    }
+//
+//    public void push(int x) {//最主要注意push进来的时候更新min的值
+//        dataStack.add(x);
+//        min = Math.min(min, x);
+//        minStack.add(min);
+//    }
+//
+//    public void pop() {
+//        dataStack.pop();
+//        minStack.pop();
+//        min = minStack.isEmpty() ? Integer.MAX_VALUE : minStack.peek();
+//    }
+//
+//    public int top() {
+//        return dataStack.peek();
+//    }
+//
+//    public int getMin() {
+//        return minStack.peek();
+//    }
+//}
