@@ -71,14 +71,17 @@ public class FuntionTest {
 //        for (int i = 0; i < dist.length; i++) {
 //            System.out.println(dist[i]);
 //        }
-        int[] test = {1,2,4,3,1};
-        Test503 test503 = new Test503();
-        int[] ans = test503.nextGreaterElements(test);
+//        int[] test = {1,2,4,3,1};
+//        Test503 test503 = new Test503();
+//        int[] ans = test503.nextGreaterElements(test);
 //        for (int i = 0; i < ans.length; i++) {
 //            System.out.println(ans[i]);
 //
 //        }
 
+        Test594 test594 = new Test594();
+        int[] test = {1,3,2,2,5,2,3,7};
+        test594.findLHS(test);
     }
 
 }

@@ -1,6 +1,6 @@
 [toc]
 
-# Leetcode练习之PeterHo的刷题记录
+# PeterHo的LeetCode之旅
 
 >本文从 Leetcode 中精选大概 200 左右的题目，去除了某些繁杂但是没有多少算法思想的题目，同时保留了面试中经常被问到的经典题目。
 
@@ -833,7 +833,22 @@
 1. 数组中两个数的和为给定值--1--Easy
 
    ```java
-   
+   class Solution {
+       public int[] twoSum(int[] nums, int target) {
+           //用 HashMap 存储数组元素和索引的映射，
+           //在访问到 nums[i] 时，判断 HashMap 中是否存在 target - nums[i]，
+           //如果存在说明 target - nums[i] 所在的索引和 i 就是要找的两个数。
+           HashMap<Integer, Integer> indexForNum = new HashMap<>();
+           for (int i = 0; i < nums.length; i++) {
+               if (indexForNum.containsKey(target - nums[i])) {
+                   return new int[]{indexForNum.get(target - nums[i]), i};
+               } else {
+                   indexForNum.put(nums[i], i);
+               }
+           }
+           return null;
+       }
+   }
    ```
 
    
@@ -841,7 +856,15 @@
 2. 判断数组是否含有重复元素--217--Easy
 
    ```java
-   
+   class Solution {
+       public boolean containsDuplicate(int[] nums) {
+           //HashSet自带去重，所以HashSet的size小于数组的length的话就存在重复元素
+           Set<Integer> res = new HashSet<>();
+           for(int i:nums)
+               res.add(i);
+           return res.size()<nums.length;
+       }
+   }
    ```
 
    
@@ -849,7 +872,25 @@
 3. 最长和谐序列--594--Easy
 
    ```java
-   
+   class Solution {
+       public int findLHS(int[] nums) {
+           //和谐序列中最大数和最小数之差正好为 1，应该注意的是序列的元素不一定是数组的连续元素。
+           Map<Integer, Integer> countForNum = new HashMap<>();
+           for (int num : nums) {
+               //getOrDefault意思就是当Map集合中有这个key时，就使用这个key值，如果没有就使用默认值defaultValue
+               //此处存入的是每个元素出现的次数
+               countForNum.put(num, countForNum.getOrDefault(num, 0) + 1);
+           }
+           int longest = 0;
+           for (int num : countForNum.keySet()) {
+               //当前元素是num，判断Map中是否存在num+1的元素，longset取当前longest与这两个元素和的最大值
+               if (countForNum.containsKey(num + 1)) {
+                   longest = Math.max(longest, countForNum.get(num + 1) + countForNum.get(num));
+               }
+           }
+           return longest;
+       }
+   }
    ```
 
    
@@ -857,7 +898,62 @@
 4. 最长连续序列--128--Hard
 
    ```java
+   class Solution {
+       public int longestConsecutive(int[] nums) {
+           Map<Integer, Integer> countForNum = new HashMap<>();
+           for (int num : nums) {
+               countForNum.put(num, 1);
+           }
+           for (int num : nums) {
+               forward(countForNum, num);
+           }
+           return maxCount(countForNum);
+       }
    
+       private int forward(Map<Integer, Integer> countForNum, int num) {
+           if (!countForNum.containsKey(num)) {
+               return 0;
+           }
+           int cnt = countForNum.get(num);
+           if (cnt > 1) {
+               return cnt;
+           }
+           cnt = forward(countForNum, num + 1) + 1;
+           countForNum.put(num, cnt);
+           return cnt;
+       }
+   
+       private int maxCount(Map<Integer, Integer> countForNum) {
+           int max = 0;
+           for (int num : countForNum.keySet()) {
+               max = Math.max(max, countForNum.get(num));
+           }
+           return max;
+       }
+   }
+   
+   
+   class Solution {
+       public int longestConsecutive(int[] nums) {
+           int n=nums.length;
+           HashMap<Integer,Integer>map = new HashMap<Integer,Integer>();
+           int res = 0;
+           for(int num:nums){
+               if(!map.containsKey(num)){
+                   int left = map.get(num-1)==null?0:map.get(num-1);
+                   int right = map.get(num+1)==null?0:map.get(num+1);
+                   int cur = 1+left+right;
+                   if(cur>res){
+                       res = cur;
+                   }
+                   map.put(num,cur);
+                   map.put(num-left,cur);
+                   map.put(num+right,cur);
+               }
+           }
+           return res;
+       }
+   }
    ```
 
    
