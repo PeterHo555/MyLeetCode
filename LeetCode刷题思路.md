@@ -452,11 +452,11 @@
 
 3. 非递归实现二叉树的中序遍历--94--Medium
 
-  ```java
-  
-  ```
+   ```java
+   
+   ```
 
-  
+   
 
 #### BST
 
@@ -935,27 +935,33 @@
    
    class Solution {
        public int longestConsecutive(int[] nums) {
-           int n=nums.length;
-           HashMap<Integer,Integer>map = new HashMap<Integer,Integer>();
-           int res = 0;
-           for(int num:nums){
-               if(!map.containsKey(num)){
-                   int left = map.get(num-1)==null?0:map.get(num-1);
-                   int right = map.get(num+1)==null?0:map.get(num+1);
-                   int cur = 1+left+right;
-                   if(cur>res){
-                       res = cur;
+           //思路是将所有元素用HashMap存储
+           //以每一个元素为原点，向左右两边扩张，保存当前元素已经存在的最大连续子序列
+           //相同元素的最大连续子序列是相等的
+           int n = nums.length;
+           HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+           int ans = 0;
+           for (int num : nums) {
+               if (!map.containsKey(num)) {
+                   //判断是否有num-1这个元素，如果有令left值等于此元素的当前最大连续子序列长度
+                   int left = map.get(num - 1) == null ? 0 : map.get(num - 1);
+                   //判断是否有num+1这个元素，如果有令right值等于此元素的当前最大连续子序列长度
+                   int right = map.get(num + 1) == null ? 0 : map.get(num + 1);
+                   int cur = 1 + left + right;
+                   //判断当前元素的最大扩张是否最大
+                   if (cur > ans) {
+                       ans = cur;
                    }
-                   map.put(num,cur);
-                   map.put(num-left,cur);
-                   map.put(num+right,cur);
-               }
+                   map.put(num, cur);
+                   map.put(num - left, cur);
+                   map.put(num + right, cur);
+            }
            }
-           return res;
+           return ans;
        }
    }
    ```
-
+   
    
 
 ---
@@ -1041,7 +1047,19 @@
 1. 把数组中的 0 移到末尾--283--Easy
 
    ```java
-   
+   class Solution {
+       public void moveZeroes(int[] nums) {
+           int idx = 0;
+           for (int num : nums) {
+               if (num != 0) {
+                   nums[idx++] = num;
+               }
+           }
+           while (idx < nums.length) {
+               nums[idx++] = 0;
+           }
+       }
+   }
    ```
 
    
@@ -1049,7 +1067,24 @@
 2. 改变矩阵维度--566--Easy
 
    ```java
-   
+   class Solution {
+       public int[][] matrixReshape(int[][] nums, int r, int c) {
+           int m = nums.length, n = nums[0].length;
+           if (m * n != r * c) {
+               return nums;
+           }
+           int index = 0;
+           int[][] ans = new int[r][c];
+           for (int i = 0; i < r; i++) {
+               for (int j = 0; j < c; j++) {
+                   //nums数组中第index个元素为nums[index / n][index % n]
+                   ans[i][j] = nums[index / n][index % n];
+                   index++;
+               }
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -1057,7 +1092,18 @@
 3. 找出数组中最长的连续 1--485--Easy
 
    ```java
+   class Solution {
+       public int findMaxConsecutiveOnes(int[] nums) {
+           //暴力
+           int max = 0, cur = 0;
+           for (int x : nums) {
+               cur = x == 0 ? 0 : cur + 1;
+               max = Math.max(max, cur);
+           }
+           return max;
    
+       }
+   }
    ```
 
    
@@ -1065,7 +1111,22 @@
 4. 有序矩阵查找--240--Medium
 
    ```java
-   
+   class Solution {
+       public boolean searchMatrix(int[][] matrix, int target) {
+           if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+               return false;
+           int m = matrix.length, n = matrix[0].length;
+           int row = 0, col = n-1;
+         	//col--比col++更合适处理此情况
+           while (row < m && col >= 0){
+               if (target == matrix[row][col]) return true;
+               else if (target < matrix[row][col]) col--;
+               else
+                   row++;
+           }
+           return false;
+       }
+   }
    ```
 
    
@@ -1073,15 +1134,74 @@
 5. 有序矩阵的 Kth Element--378--Medium
 
    ```java
+   class Solution {
+       public int kthSmallest(int[][] matrix, int k) {
+           //直接排序法
+           int rows = matrix.length, columns = matrix[0].length;
+           int[] sorted = new int[rows * columns];
+           int index = 0;
+           for (int[] row : matrix) {
+               for (int num : row) {
+                   sorted[index++] = num;
+               }
+           }
+           Arrays.sort(sorted);
+           return sorted[k - 1];
+       }
+   }
    
+   
+   
+   class Solution {
+       public int kthSmallest(int[][] matrix, int k) {
+           //二分查找法
+           int m = matrix.length, n = matrix[0].length;
+           int low = matrix[0][0], high = matrix[m - 1][n - 1];
+           while (low <= high) {
+               int mid = low + (high - low) / 2;
+               int count = 0;
+               //计算数组中小于当前mid的元素个数
+               for (int i = 0; i < m; i++) 
+                   for (int j = 0; j < n && matrix[i][j] <= mid; j++) 
+                       count++;
+               //数组中小于mid的个数小于k，调整下界，令low等于mid+1
+               //反之，调整上界，令high等于mid-1
+               if (count < k)
+                   low = mid + 1;
+               else
+                   high = mid - 1;
+           }
+           //经计算的下界元素，即数组中第k小的元素
+           return low;
+       }   
+   }
    ```
 
    
 
-6.  一个数组元素在 [1, n] 之间，其中一个数被替换为另一个数，找出重复的数和丢失的数--645--Easy
+6. 一个数组元素在 [1, n] 之间，其中一个数被替换为另一个数，找出重复的数和丢失的数--645--Easy
 
    ```java
-   
+   class Solution {
+       public int[] findErrorNums(int[] nums) {
+           // 用一个布尔数组来记录元素是否出现，布尔数组默认值为false
+           boolean[] showed = new boolean[nums.length + 1];
+           int[] ans = new int[2];
+           for (int num : nums) {
+               // 出现了重复的数字 置为true
+               if (showed[num])
+                   ans[0] = num;
+               else
+                   showed[num] = true;
+           }
+           for (int i = 1; i <= nums.length; i++) {
+               // 找到没有出现的那一位
+               if (!showed[i])
+                   ans[1] = i;
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -1089,7 +1209,37 @@
 7. 找出数组中重复的数，数组值在 [1, n] 之间--287--Medium
 
    ```java
-   
+   class Solution {
+       public int findDuplicate(int[] nums) {
+           //双指针解法，类似于有环链表中找出环的入口：
+           int slow = nums[0], fast = nums[nums[0]];
+           while (slow != fast) {
+               slow = nums[slow];
+               fast = nums[nums[fast]];
+           }
+           fast = 0;
+           while (slow != fast) {
+               slow = nums[slow];
+               fast = nums[fast];
+           }
+           return slow;
+       }
+   }
+   //上述解法过于炫技，我选择hashset
+   class Solution {
+       public int findDuplicate(int[] nums) {
+           Set<Integer> set = new HashSet<>();
+           int ans = 0;
+           for (int i = 0; i < nums.length; i++) {
+               if (!set.contains(nums[i])) {
+                   set.add(nums[i]);
+               }else {
+                   ans = nums[i];
+               }
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -1129,9 +1279,14 @@
 12. 分隔数组--769--Medium
 
     ```java
+    //思路
+    //首先找到从左块开始最小块的大小。
+//如果前 k 个元素为 [0, 1, ..., k-1]，可以直接把他们分为一个块。
+    //当我们需要检查 [0, 1, ..., n-1] 中前 k+1 个元素是不是 [0, 1, ..., k] 的时候，只需要检查其中最大的数是不是 k 就可以了。
+    
     
     ```
-
+    
     
 
 ---
@@ -1152,19 +1307,19 @@
 
 1. 课程安排的合法性--207--Medium
 
-  ```java
-  
-  ```
+   ```java
+   
+   ```
 
-  
+   
 
 2. 课程安排的顺序--210--Medium
 
-  ```java
-  
-  ```
+   ```java
+   
+   ```
 
-  
+   
 
 #### 并查集
 

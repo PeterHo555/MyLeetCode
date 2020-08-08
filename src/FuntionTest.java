@@ -78,10 +78,28 @@ public class FuntionTest {
 //            System.out.println(ans[i]);
 //
 //        }
+//
+//        Test594 test594 = new Test594();
+//        int[] test = {1,3,2,2,5,2,3,7};
+//        test594.findLHS(test);
 
-        Test594 test594 = new Test594();
-        int[] test = {1,3,2,2,5,2,3,7};
-        test594.findLHS(test);
+//        int[] test = {100, 4, 4, 200, 1, 3, 2};
+//        Test128 test128 = new Test128();
+//        test128.longestConsecutive(test);
+//        Test378 test378 = new Test378();
+//        int[][] test ={
+//                {1,  5,  9},
+//                {10, 11, 13},
+//                {12, 13, 15}
+//                };
+//        test378.kthSmallest(test,8);
+
+       Test287 test287 = new Test287();
+       int[] test = {1,3,4,2,3};
+       test287.findDuplicate(test);
+
+
+
     }
 
 }
