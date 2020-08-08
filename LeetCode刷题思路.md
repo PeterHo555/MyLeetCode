@@ -1263,7 +1263,20 @@
 10. 对角元素相等的矩阵--766--Easy
 
     ```java
+    //方法一：判断上一行去掉最后一个元素 和 下一行去掉第一个元素是否相等
     
+    //方法二：暴力
+    class Solution {
+        public boolean isToeplitzMatrix(int[][] matrix) {
+            for (int i = 1; i < matrix.length; i++) {
+                for (int j = 1; j < matrix[0].length; j++) {
+                    if (matrix[i][j] != matrix[i - 1][j - 1])
+                        return false;
+                }
+            }
+            return true;
+        }
+    }
     ```
 
     
@@ -1279,11 +1292,20 @@
 12. 分隔数组--769--Medium
 
     ```java
-    //思路
-    //首先找到从左块开始最小块的大小。
-//如果前 k 个元素为 [0, 1, ..., k-1]，可以直接把他们分为一个块。
-    //当我们需要检查 [0, 1, ..., n-1] 中前 k+1 个元素是不是 [0, 1, ..., k] 的时候，只需要检查其中最大的数是不是 k 就可以了。
-    
+    class Solution {
+        public int maxChunksToSorted(int[] arr) {
+        //思路
+            //首先找到从左块开始最小块的大小。
+            //如果前 k 个元素为 [0, 1, ..., k-1]，可以直接把他们分为一个块。
+            //当我们需要检查 [0, 1, ..., n-1] 中前 k+1 个元素是不是 [0, 1, ..., k] 的时候，只需要检查其中最大的数是不是 k 就可以了。
+            int ans = 0, max = 0;
+            for (int i = 0; i < arr.length; ++i) {
+                max = Math.max(max, arr[i]);
+                if (max == i) ans++;
+            }
+            return ans;
+        }
+    }
     
     ```
     
