@@ -94,10 +94,12 @@ public class FuntionTest {
 //                };
 //        test378.kthSmallest(test,8);
 
-       Test287 test287 = new Test287();
-       int[] test = {1,3,4,2,3};
-       test287.findDuplicate(test);
-
+//       Test287 test287 = new Test287();
+//       int[] test = {1,3,4,2,3};
+//       test287.findDuplicate(test);
+        Test697 test697 = new Test697();
+        int[] test = {1,2,2,3,1,4,2};
+        test697.findShortestSubArray(test);
 
 
     }

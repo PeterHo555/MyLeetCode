@@ -953,6 +953,7 @@
                        ans = cur;
                    }
                    map.put(num, cur);
+                   //更新与之相关的左右元素的最大子序列
                    map.put(num - left, cur);
                    map.put(num + right, cur);
             }
@@ -1247,7 +1248,21 @@
 8. 数组相邻差值的个数--667--Medium
 
    ```java
-   
+   class Solution {
+       public int[] constructArray(int n, int k) {
+           //题目描述：数组元素为 1\~n 的整数，要求构建数组，使得相邻元素的差值不相同的个数为 k。
+           //让前 k+1 个元素构建出 k 个不相同的差值，序列为：1、k+1、 2、k、 3、k-1 ... k/2、k/2+1.
+           int[] ret = new int[n];
+           ret[0] = 1;
+           for (int i = 1, interval = k; i <= k; i++, interval--) {
+               ret[i] = i % 2 == 1 ? ret[i - 1] + interval : ret[i - 1] - interval;
+           }
+           for (int i = k + 1; i < n; i++) {
+               ret[i] = i + 1;
+           }
+           return ret;
+       }
+   }
    ```
 
    
@@ -1255,7 +1270,38 @@
 9. 数组的度--697--Easy
 
    ```java
-   
+   class Solution {
+       public int findShortestSubArray(int[] nums) {
+           //题目意思是在不改变原数组顺序的情况下求出一个度与原数组一样的子数组
+           //用来记录每个元素出现的次数
+           Map<Integer, Integer> numsCnt = new HashMap<>();
+           //记录每个元素的最后一次出现的下标
+           Map<Integer, Integer> numsLastIndex = new HashMap<>();
+           //记录每个元素的第一次出现的下标
+           Map<Integer, Integer> numsFirstIndex = new HashMap<>();
+           for (int i = 0; i < nums.length; i++) {
+               int num = nums[i];
+               numsCnt.put(num, numsCnt.getOrDefault(num, 0) + 1);
+               numsLastIndex.put(num, i);
+               if (!numsFirstIndex.containsKey(num)) {
+                   numsFirstIndex.put(num, i);
+               }
+           }
+           //求出数组的度
+           int maxCnt = 0;
+           for (int num : nums) {
+               maxCnt = Math.max(maxCnt, numsCnt.get(num));
+           }
+           int ans = nums.length;
+           for (int i = 0; i < nums.length; i++) {
+               int num = nums[i];
+               int cnt = numsCnt.get(num);
+               if (cnt != maxCnt) continue;
+               ans = Math.min(ans, numsLastIndex.get(num) - numsFirstIndex.get(num) + 1);
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -1284,6 +1330,22 @@
 11. 嵌套数组--565--Medium
 
     ```java
+    class Solution {
+        public int arrayNesting(int[] nums) {
+            int max = 0;
+            for (int i = 0; i < nums.length; i++) {
+                int cnt = 0;
+                for (int j = i; nums[j] != -1; ) {
+                    cnt++;
+                    int t = nums[j];
+                    nums[j] = -1; // 标记该位置已经被访问
+                    j = t;
+                }
+                max = Math.max(max, cnt);
+            }
+            return max;
+        }
+    }
     
     ```
 
