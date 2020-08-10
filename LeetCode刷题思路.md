@@ -150,8 +150,6 @@
 
    
 
-
-
 7. 链表求和--445--Medium
 
    ```java
@@ -305,7 +303,13 @@
 1. 树的高度--104--Easy
 
    ```java
-   
+   class Solution {
+       public int maxDepth(TreeNode root) {
+           if (root == null)
+               return 0;
+           return  Math.max(maxDepth(root.left),maxDepth(root.right))+1;
+       }
+   }
    ```
 
    
@@ -313,7 +317,24 @@
 2. 平衡树--110--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isBalanced(TreeNode root) {
+           return helper(root)>=0;
+       }
+       //递归法解决方案
+       public int helper(TreeNode root){
+           if(root == null){
+               return 0;
+           }
+           int l = helper(root.left);
+           int r = helper(root.right);
+           //左子树与右子树差值大于1，则标记为不平衡（-1）
+           if(l==-1 || r==-1 || Math.abs(l-r)>1)
+               return -1;
+           //平衡则标记为上一层的高度+1
+           return Math.max(l,r) +1;
+       }
+   }
    ```
 
    
@@ -321,7 +342,23 @@
 3. 两节点的最长路径--543--Easy
 
    ```java
+   class Solution {
+       private int max = 0;
    
+       public int diameterOfBinaryTree(TreeNode root) {
+           //遍历每一个节点,求出此节点作为根的树的深度,那么,左子树深度加右子树深度的最大值即是答案
+           depth(root);
+           return max;
+       }
+     
+       private int depth(TreeNode root) {
+           if (root == null) return 0;
+           int leftDepth = depth(root.left);
+           int rightDepth = depth(root.right);
+           max = Math.max(max, leftDepth + rightDepth);
+           return Math.max(leftDepth, rightDepth) + 1;
+       }
+   }
    ```
 
    
@@ -329,7 +366,15 @@
 4. 翻转树--226--Easy
 
    ```java
-   
+   class Solution {
+       public TreeNode invertTree(TreeNode root) {
+           if (root == null) return null;
+           TreeNode tempLeft = root.left;//后面的操作会改变 left 指针，因此先保存下来
+           root.left = invertTree(root.right);
+           root.right = invertTree(tempLeft);
+           return root;
+       }
+   }
    ```
 
    
@@ -337,7 +382,18 @@
 5. 归并两棵树--617--Easy
 
    ```java
-   
+   class Solution {
+       public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+           //递归相加对应元素
+           if (t1 == null && t2 == null) return null;
+           if (t1 == null) return t2;
+           if (t2 == null) return t1;
+           TreeNode root = new TreeNode(t1.val + t2.val);
+           root.left = mergeTrees(t1.left, t2.left);
+           root.right = mergeTrees(t1.right, t2.right);
+           return root;
+       }
+   }
    ```
 
    
@@ -345,15 +401,39 @@
 6. 判断路径和是否等于一个数--112--Easy
 
    ```java
-   
+   class Solution {
+       public boolean hasPathSum(TreeNode root, int sum) {
+           //是否为空树
+           if (root == null) return false;
+           //是否为叶子节点，若是，判断是否路径上的和值等于sum
+           if (root.left == null && root.right == null) return sum == root.val;
+           //递归法对左子树和右子树求解
+           return hasPathSum(root.left,sum - root.val) || hasPathSum(root.right, sum - root.val);
+       }
+   }
    ```
 
    
 
-7. 统计路径和等于一个数的路径数量--437--Easy
+7. 统计路径和等于一个数的路径数量--437--Medium
 
    ```java
+   class Solution {
+       //路径不一定以 root 开头，也不一定以 leaf 结尾，但是必须连续。
+       public int pathSum(TreeNode root, int sum) {
+           if (root == null) return 0;
+           int ans = pathSumStartWithRoot(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum);
+           return ans;
+       }
    
+       private int pathSumStartWithRoot(TreeNode root, int sum) {
+           if (root == null) return 0;
+           int ans = 0;
+           if (root.val == sum) ans++;
+           ans += pathSumStartWithRoot(root.left, sum - root.val) + pathSumStartWithRoot(root.right, sum - root.val);
+           return ans;
+       }
+   }
    ```
 
    
@@ -361,7 +441,19 @@
 8. 子树--572--Easy
 
    ```java
+   class Solution {
+       public boolean isSubtree(TreeNode s, TreeNode t) {
+           if (s == null) return false;
+           return isSubtreeWithRoot(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t);
+       }
    
+       private boolean isSubtreeWithRoot(TreeNode s, TreeNode t) {
+           if (t == null && s == null) return true;
+           if (t == null || s == null) return false;
+           if (t.val != s.val) return false;
+           return isSubtreeWithRoot(s.left, t.left) && isSubtreeWithRoot(s.right, t.right);
+       }
+   }
    ```
 
    
@@ -369,7 +461,20 @@
 9. 树的对称--101--Easy
 
    ```java
-   
+   class Solution {
+        public boolean isSymmetric(TreeNode root) {
+           if (root == null) return true;
+           return compare(root.left, root.right);
+       }
+       public boolean compare(TreeNode node1, TreeNode node2){
+           //左子节点与右子节点都为空，则树对称
+           if (node1 == null && node2 == null) return true;
+           //左子节点或右子节点其中之一为空，则树不对称；左自节点与右自节点值不同，则树不对称
+           if (node1 == null || node2 == null || node1.val != node2.val) return false;
+           //比较左自节点的左子树与右自节点的右子树；比较左自节点的右子树与右自节点的左子树
+           return compare(node1.left, node2.right) && compare(node1.right, node2.left);
+       }
+   }
    ```
 
    
@@ -377,7 +482,15 @@
 10. 最小路径--111--Easy
 
     ```java
-    
+    class Solution {
+        public int minDepth(TreeNode root) {
+            if (root == null) return 0;
+            if (root.left == null && root.right == null) return 1;
+            if (root.left == null && root.right != null) return 1+minDepth(root.right);
+            if (root.right == null && root.left != null) return 1+minDepth(root.left);
+            return 1+Math.min(minDepth(root.left), minDepth(root.right));
+        }
+    }
     ```
 
     
@@ -385,7 +498,15 @@
 11. 统计左叶子节点的和--404--Easy
 
     ```java
-    
+    class Solution {
+        public int sumOfLeftLeaves(TreeNode root) {
+            if (root == null) return 0;
+            //判断此节点的左子节点是否是左叶子节点，如果是则将它的和累计起来
+            if (root.left != null && root.left.left == null && root.left.right == null)
+                return root.left.val + sumOfLeftLeaves(root.right);
+            return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+        }
+    }
     ```
 
     
@@ -401,7 +522,23 @@
 13. 间隔遍历--337--Medium
 
     ```java
+    //递归法
+    class Solution {
+        public int rob(TreeNode root) {
+            //节点为空，返回0
+            if (root == null) return 0;
+            //实际上是求不同的两种层次遍历，奇数层与偶数层
+            int val1 = root.val;
+            if (root.left != null)
+                val1 += rob(root.left.left) + rob(root.left.right);
+            if (root.right != null)
+                val1 += rob(root.right.left) + rob(root.right.right);
+            int val2 = rob(root.left) + rob(root.right);
+            return Math.max(val1, val2);
+        }
+    }
     
+    //深度优先法
     ```
 
     
@@ -409,9 +546,28 @@
 14. 找出二叉树中第二小的节点--671--Easy
 
     ```java
-    
+    class Solution {
+        public int findSecondMinimumValue(TreeNode root) {
+        //1.没有必要记录最小的值，因为最小的一定是根结点。
+            //2.递归找到比根结点大的值时可以立即返回，不用再遍历当前节点下面的子节点，因为子节点的值不可能比它小。
+            if (root == null) return -1;
+            if (root.left == null && root.right == null) 
+                return -1;
+            int leftVal = root.left.val;
+            int rightVal = root.right.val;
+            if (leftVal == root.val)
+                leftVal = findSecondMinimumValue(root.left);
+            if (rightVal == root.val)
+                rightVal = findSecondMinimumValue(root.right);
+            if (leftVal != -1 && rightVal != -1)
+                return Math.min(leftVal, rightVal);
+            if (leftVal != -1)
+                return leftVal;
+            return rightVal;
+        }
+    }
     ```
-
+    
     
 
 #### 层次遍历
@@ -419,33 +575,99 @@
 1. 一棵树每层节点的平均数--637--Easy
 
    ```java
-   
+   class Solution {
+       public List<Double> averageOfLevels(TreeNode root) {
+           List<Double> ans = new ArrayList<>();
+           if (root == null) return ans;
+           Queue<TreeNode> queue = new LinkedList<>();
+           queue.add(root);
+           while (!queue.isEmpty()) {
+               //当前层的节点个数
+               int cnt = queue.size();
+               double sum = 0;
+               for (int i = 0; i < cnt; i++) {
+                   //取出节点
+                   TreeNode node = queue.poll();
+                   sum += node.val;
+                   //存入此节点的子节点用作下一层均值计算
+                   if (node.left != null) queue.add(node.left);
+                   if (node.right != null) queue.add(node.right);
+               }
+               //存入当前层的平均值
+               ans.add(sum / cnt);
+           }
+           return ans;
+       }
+   }
    ```
 
    
 
 2. 得到左下角的节点--513--Easy
 
-  ```java
-  
-  ```
+   ```java
+   class Solution {
+       public int findBottomLeftValue(TreeNode root) {
+           //层次遍历
+           Queue<TreeNode> queue = new LinkedList<>();
+           queue.add(root);
+           while (!queue.isEmpty()){
+               //注意顺序不能错，先取节点，再按顺序将其右子节与左子节点点入队，
+               root = queue.poll();
+               if (root.right != null) queue.add(root.right);
+               if (root.left != null) queue.add(root.left);
+           }
+           return root.val;
+       }
+   }
+   ```
 
-  
+     
 
 #### 前中后序遍历
 
 1. 非递归实现二叉树的前序遍历--144--Medium
 
    ```java
-   
+   class Solution {
+       public List<Integer> preorderTraversal(TreeNode root) {
+           List<Integer> ret = new ArrayList<>();
+           Stack<TreeNode> stack = new Stack<>();
+           stack.push(root);
+           while (!stack.isEmpty()) {
+               TreeNode node = stack.pop();
+               if (node == null) continue;
+               ret.add(node.val);
+               stack.push(node.right);  // 先右后左，保证左子树先遍历
+               stack.push(node.left);
+           }
+           return ret;
+       }
+   }
    ```
 
    
 
-2. 非递归实现二叉树的后序遍历--145--Medium
+2. 非递归实现二叉树的后序遍历--145--Hard
 
    ```java
-   
+   class Solution {
+       public List<Integer> postorderTraversal(TreeNode root) {
+           List<Integer> ret = new ArrayList<>();
+           Stack<TreeNode> stack = new Stack<>();
+           stack.push(root);
+           while (!stack.isEmpty()) {
+               TreeNode node = stack.pop();
+               if (node == null) continue;
+               ret.add(node.val);
+               stack.push(node.left); //先左后右，保证右子树先遍历
+               stack.push(node.right);
+           }
+           //从根右左转成左右根
+           Collections.reverse(ret);
+           return ret;
+       }
+   }
    ```
 
    
@@ -1637,49 +1859,883 @@
 
 ### 双指针
 
+1. 有序数组的 Two Sum--167--Easy
 
+   ```java
+   
+   ```
+
+   
+
+2. 两数平方和
+
+   ```java
+   
+   ```
+
+   
+
+3. 反转字符串中的元音字符
+
+   ```java
+   
+   ```
+
+   
+
+4. 回文字符串
+
+   ```java
+   
+   ```
+
+   
+
+5. 归并两个有序数组
+
+   ```java
+   
+   ```
+
+   
+
+6. 判断链表是否存在环
+
+   ```java
+   
+   ```
+
+   
+
+7. 最长子序列
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
 ### 排序
 
+#### 快速选择
 
+用于求解   **Kth Element**   问题，也就是第 K 个元素的问题。
+
+可以使用快速排序的 partition() 进行实现。需要先打乱数组，否则最坏情况下时间复杂度为 O(N<sup>2</sup>)。
+
+#### 堆
+
+1. Kth Element
+
+   ```java
+   
+   ```
+
+   
+
+#### 桶排序
+
+1. 出现频率最多的 k 个元素
+
+   ```java
+   
+   ```
+
+   
+
+2. 按照字符出现次数对字符串排序
+
+   ```java
+   
+   ```
+
+   
+
+#### 荷兰国旗问题
+
+1. 按颜色进行排序
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
 ### 贪心思想
 
+1. 分配饼干
 
+   ```java
+   
+   ```
+
+   
+
+2. 不重叠的区间个数
+
+   ```java
+   
+   ```
+
+   
+
+3. 投飞镖刺破气球
+
+   ```java
+   
+   ```
+
+   
+
+4. 根据身高和序号重组队列
+
+   ```java
+   
+   ```
+
+   
+
+5. 买卖股票最大的收益
+
+   ```java
+   
+   ```
+
+   
+
+6. 买卖股票的最大收益 II
+
+   ```java
+   
+   ```
+
+   
+
+7. 种植花朵
+
+   ```java
+   
+   ```
+
+   
+
+8. 判断是否为子序列
+
+   ```java
+   
+   ```
+
+   
+
+9. 修改一个数成为非递减数组
+
+   ```java
+   
+   ```
+
+   
+
+10. 子数组最大的和
+
+    ```java
+    
+    ```
+
+    
+
+11. 分隔字符串使同种字符出现在一起
+
+    ```java
+    
+    ```
+
+    
 
 ---
 
 ### 二分查找
 
+1. 求开方
 
+   ```java
+   
+   ```
+
+   
+
+2. 大于给定元素的最小元素
+
+   ```java
+   
+   ```
+
+   
+
+3. 有序数组的 Single Element
+
+   ```java
+   
+   ```
+
+   
+
+4. 第一个错误的版本
+
+   ```java
+   
+   ```
+
+   
+
+5. 旋转数组的最小数字
+
+   ```java
+   
+   ```
+
+   
+
+6. 查找区间
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
 ### 分治
 
+1. 给表达式加括号
 
+   ```java
+   
+   ```
+
+   
+
+2. 不同的二叉搜索树
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
 ### 搜索
 
+#### BFS
 
+1. 计算在网格中从原点到特定点的最短路径长度
+
+   ```java
+   
+   ```
+
+   
+
+2. 组成整数的最小平方数数量
+
+   ```java
+   
+   ```
+
+   
+
+3. 最短单词路径
+
+   ```java
+   
+   ```
+
+   
+
+#### DFS
+
+1. 查找最大的连通面积
+
+   ```java
+   
+   ```
+
+   
+
+2. 矩阵中的连通分量数目
+
+   ```java
+   
+   ```
+
+   
+
+3. 好友关系的连通分量数目
+
+   ```java
+   
+   ```
+
+   
+
+4. 填充封闭区域
+
+   ```java
+   
+   ```
+
+   
+
+5. 能到达的太平洋和大西洋的区域
+
+   ```java
+   
+   ```
+
+   
+
+#### Backtracking
+
+1. 数字键盘组合
+
+   ```java
+   
+   ```
+
+   
+
+2. IP 地址划分
+
+   ```java
+   
+   ```
+
+   
+
+3. 在矩阵中寻找字符串
+
+   ```java
+   
+   ```
+
+   
+
+4. 输出二叉树中所有从根到叶子的路径
+
+   ```java
+   
+   ```
+
+   
+
+5. 排列
+
+   ```java
+   
+   ```
+
+   
+
+6. 含有相同元素求排列
+
+   ```java
+   
+   ```
+
+   
+
+7. 组合
+
+   ```java
+   
+   ```
+
+   
+
+8. 组合求和
+
+   ```java
+   
+   ```
+
+   
+
+9. 含有相同元素的组合求和
+
+   ```java
+   
+   ```
+
+   
+
+10. 1-9 数字的组合求和
+
+    ```java
+    
+    ```
+
+    
+
+11. 子集
+
+    ```java
+    
+    ```
+
+    
+
+12. 含有相同元素求子集
+
+    ```java
+    
+    ```
+
+    
+
+13. 分割字符串使得每个部分都是回文数
+
+    ```java
+    
+    ```
+
+    
+
+14. 数独
+
+    ```java
+    
+    ```
+
+    
+
+15. N 皇后
+
+    ```java
+    
+    ```
+
+    
 
 ---
 
 ### 动态规划
 
+#### 斐波那契数列
 
+1. 爬楼梯
+
+   ```java
+   
+   ```
+
+   
+
+2. 强盗抢劫
+
+   ```java
+   
+   ```
+
+   
+
+3. 强盗在环形街区抢劫
+
+   ```java
+   
+   ```
+
+   
+
+4. 信件错排
+
+   ```java
+   
+   ```
+
+   
+
+5. 母牛生产
+
+   ```java
+   
+   ```
+
+   
+
+#### 矩阵路径
+
+1. 矩阵的最小路径和
+
+   ```java
+   
+   ```
+
+   
+
+2. 矩阵的总路径数
+
+   ```java
+   
+   ```
+
+   
+
+#### 数组区间
+
+1. 数组区间和
+
+   ```java
+   
+   ```
+
+   
+
+2. 数组中等差递增子区间的个数
+
+   ```java
+   
+   ```
+
+   
+
+#### 分割整数
+
+1. 分割整数的最大乘积
+
+   ```java
+   
+   ```
+
+   
+
+2. 按平方数来分割整数
+
+   ```java
+   
+   ```
+
+   
+
+3. 分割整数构成字母字符串
+
+   ```java
+   
+   ```
+
+   
+
+#### 最长递增子序列
+
+1. 最长递增子序列
+
+   ```java
+   
+   ```
+
+   
+
+2. 一组整数对能够构成的最长链
+
+   ```java
+   
+   ```
+
+   
+
+3. 最长摆动子序列
+
+   ```java
+   
+   ```
+
+   
+
+#### 最长公共子序列
+
+1. 最长公共子序列
+
+   ```java
+   
+   ```
+
+   
+
+#### 0-1背包
+
+1. 划分数组为和相等的两部分
+
+   ```java
+   
+   ```
+
+   
+
+2. 改变一组数的正负号使得它们的和为一给定数
+
+   ```java
+   
+   ```
+
+   
+
+3. 01 字符构成最多的字符串
+
+   ```java
+   
+   ```
+
+   
+
+4. 找零钱的最少硬币数
+
+   ```java
+   
+   ```
+
+   
+
+5. 找零钱的硬币数组合
+
+   ```java
+   
+   ```
+
+   
+
+6. 字符串按单词列表分割
+
+   ```java
+   
+   ```
+
+   
+
+7. 组合总和
+
+   ```java
+   
+   ```
+
+   
+
+#### 股票交易
+
+1. 需要冷却期的股票交易
+
+   ```java
+   
+   ```
+
+   
+
+2. 需要交易费用的股票交易
+
+   ```java
+   
+   ```
+
+   
+
+3. 只能进行两次的股票交易
+
+   ```java
+   
+   ```
+
+   
+
+4. 只能进行 k 次的股票交易
+
+   ```java
+   
+   ```
+
+   
+
+#### 字符串编辑
+
+1. 删除两个字符串的字符使它们相等
+
+   ```java
+   
+   ```
+
+   
+
+2. 编辑距离
+
+   ```java
+   
+   ```
+
+   
+
+3. 复制粘贴字符
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
 ### 数学
 
+#### 素数分解
 
+每一个数都可以分解成素数的乘积，例如 84 = 2<sup>2</sup> \* 3<sup>1</sup> \* 5<sup>0</sup> \* 7<sup>1</sup> \* 11<sup>0</sup> \* 13<sup>0</sup> \* 17<sup>0</sup> \* …
+
+#### 整除
+
+令 x = 2<sup>m0</sup> \* 3<sup>m1</sup> \* 5<sup>m2</sup> \* 7<sup>m3</sup> \* 11<sup>m4</sup> \* …
+
+令 y = 2<sup>n0</sup> \* 3<sup>n1</sup> \* 5<sup>n2</sup> \* 7<sup>n3</sup> \* 11<sup>n4</sup> \* …
+
+如果 x 整除 y（y mod x == 0），则对于所有 i，mi <= ni。
+
+#### 最大公约数最小公倍数
+
+x 和 y 的最大公约数为：gcd(x,y) =  2<sup>min(m0,n0)</sup> \* 3<sup>min(m1,n1)</sup> \* 5<sup>min(m2,n2)</sup> \* ...
+
+x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(m1,n1)</sup> \* 5<sup>max(m2,n2)</sup> \* ...
+
+1. 生成素数序列
+
+   ```java
+   
+   ```
+
+   
+
+2. 最大公约数
+
+   ```java
+   
+   ```
+
+   
+
+3. 使用位操作和减法求解最大公约数
+
+   ```java
+   
+   ```
+
+   
+
+#### 进制转换
+
+1. 7 进制
+
+   ```java
+   
+   ```
+
+   
+
+2. 16 进制
+
+   ```java
+   
+   ```
+
+   
+
+3. 26 进制
+
+   ```java
+   
+   ```
+
+   
+
+#### 阶乘
+
+1. 统计阶乘尾部有多少个 0
+
+   ```java
+   
+   ```
+
+   
+
+#### 字符串加法减法
+
+1. 二进制加法
+
+   ```java
+   
+   ```
+
+   
+
+2. 字符串加法
+
+   ```java
+   
+   ```
+
+   
+
+#### 相遇问题
+
+1. 改变数组元素使所有的数组元素都相等
+
+   ```java
+   
+   ```
+
+   
+
+#### 多数投票问题
+
+1. 数组中出现次数多于 n / 2 的元素
+
+   ```java
+   
+   ```
+
+   
+
+#### 其它
+
+1. 平方数
+
+   ```java
+   
+   ```
+
+   
+
+2. 3 的 n 次方
+
+   ```java
+   
+   ```
+
+   
+
+3. 乘积数组
+
+   ```java
+   
+   ```
+
+   
+
+4. 找出数组中的乘积最大的三个数
+
+   ```java
+   
+   ```
+
+   
 
 ---
 
