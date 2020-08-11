@@ -2466,69 +2466,189 @@
 
 ### 动态规划
 
+递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
+
 #### 斐波那契数列
 
 1. 爬楼梯
 
    ```java
-   
+   class Solution {
+       public int climbStairs(int n) {
+           //总体思路，第n阶的方法数等于第n-1阶的方法数加第n-2阶的方法数
+           if (n==1)
+               return 1;
+           int[] dp = new int[n+1];
+           dp[1] = 1;
+           dp[2] = 2;
+           for (int i = 3; i < n + 1; i++) {
+               dp[i] = dp[i-1] + dp[i-2];
+           }
+           return dp[n];
+       }
+   }
+   //考虑到 dp[i] 只与 dp[i - 1] 和 dp[i - 2] 有关，因此可以只用两个变量来存储 dp[i - 1] 和 dp[i - 2]，使得原来的 O(N) 空间复杂度优化为 O(1) 复杂度。
+   class Solution {
+       public int climbStairs(int n) {
+           if (n <= 2) {
+               return n;
+           }
+           int pre2 = 1, pre1 = 2;
+           for (int i = 2; i < n; i++) {
+               int cur = pre1 + pre2;
+               pre2 = pre1;
+               pre1 = cur;
+           }
+           return pre1;
+       }
+   }
    ```
 
    
 
-2. 强盗抢劫
+2. 强盗抢劫--198--Easy
 
    ```java
-   
+   class Solution {
+       public int rob(int[] nums) {
+           int len = nums.length;
+           if(len == 0)
+               return 0;
+           int[] dp = new int[len + 1];
+           dp[0] = 0;
+           dp[1] = nums[0];    
+           for(int i = 2; i <= len; i++) {
+             	//动态规划方程
+               dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i-1]);
+           }
+           return dp[len];
+       }
+   }
    ```
 
    
 
-3. 强盗在环形街区抢劫
+3. 强盗在环形街区抢劫--213--Medium
 
    ```java
+   class Solution {
+       //其实就是把环拆成两个队列，一个是从0到n-2，另一个是从1到n-1，然后返回两个结果最大的。
+     	//选择0到n-2与1到n-1可以避开首末相连的情况
+       public int rob(int[] nums) {
+           if (nums == null || nums.length == 0) {
+               return 0;
+           }
+           int n = nums.length;
+           if (n == 1) {
+               return nums[0];
+           }
+           return Math.max(rob(nums, 0, n - 2), rob(nums, 1, n - 1));
+       }
    
+       private int rob(int[] nums, int first, int last) {
+           int pre2 = 0, pre1 = 0;
+           for (int i = first; i <= last; i++) {
+               int cur = Math.max(pre1, pre2 + nums[i]);
+               pre2 = pre1;
+               pre1 = cur;
+           }
+           return pre1;
+       }
+   }
    ```
 
    
 
 4. 信件错排
 
-   ```java
-   
-   ```
+   题目描述：有 N 个 信 和 信封，它们被打乱，求错误装信方式的数量。
+
+   定义一个数组 dp 存储错误方式数量，dp[i] 表示前 i 个信和信封的错误方式数量。假设第 i 个信装到第 j 个信封里面，而第 j 个信装到第 k 个信封里面。根据 i 和 k 是否相等，有两种情况：
+
+   - i==k，交换 i 和 j 的信后，它们的信和信封在正确的位置，但是其余 i-2 封信有 dp[i-2] 种错误装信的方式。由于 j 有 i-1 种取值，因此共有 (i-1)\*dp[i-2] 种错误装信方式。
+   - i != k，交换 i 和 j 的信后，第 i 个信和信封在正确的位置，其余 i-1 封信有 dp[i-1] 种错误装信方式。由于 j 有 i-1 种取值，因此共有 (i-1)\*dp[i-1] 种错误装信方式。
+
+   综上所述，错误装信数量方式数量为：
+
+   <div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[i]=(i-1)*dp[i-2]+(i-1)*dp[i-1]" class="mathjax-pic"/></div> <br>
 
    
 
 5. 母牛生产
 
-   ```java
-   
-   ```
+   题目描述：假设农场中成熟的母牛每年都会生 1 头小母牛，并且永远不会死。第一年有 1 只小母牛，从第二年开始，母牛开始生小母牛。每只小母牛 3 年之后成熟又可以生小母牛。给定整数 N，求 N 年后牛的数量。
+
+   第 i 年成熟的牛的数量为：
+
+   <div align="center"><img src="https://latex.codecogs.com/gif.latex?dp[i]=dp[i-1]+dp[i-3]" class="mathjax-pic"/></div> <br>
 
    
 
 #### 矩阵路径
 
-1. 矩阵的最小路径和
+1. 矩阵的最小路径和--64--Medium
 
    ```java
-   
+   class Solution {
+       public int minPathSum(int[][] grid) {
+           //求从矩阵的左上角到右下角的最小路径和，每次只能向右和向下移动。
+           for(int i = 0; i < grid.length; i++) {
+               for(int j = 0; j < grid[0].length; j++) {
+                   if(i == 0 && j == 0)
+                       continue;
+                   else if(i == 0)  // 只能从上侧走到该位置
+                       grid[i][j] = grid[i][j - 1] + grid[i][j];
+                   else if(j == 0)  // 只能从上侧走到该位置
+                       grid[i][j] = grid[i - 1][j] + grid[i][j];
+                   else
+                       grid[i][j] = Math.min(grid[i - 1][j], grid[i][j - 1]) + grid[i][j];
+               }
+           }
+           return grid[grid.length - 1][grid[0].length - 1];
+       }
+   }
    ```
 
    
 
-2. 矩阵的总路径数
+2. 矩阵的总路径数--198--Easy
 
    ```java
-   
+   //动态规划
+   class Solution {
+    public int uniquePaths(int m, int n) {
+           int[][] dp = new int[m][n];
+           for (int i = 0; i < m; i++) {
+               for (int j = 0; j < n; j++) {
+                   if (i == 0 || j == 0)//对于第0行和第0列。机器人只能右走或往下走，所以路径数都为1
+                       dp[i][j] = 1;
+                   else {
+                       dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                   }
+               }
+           }
+           return dp[m - 1][n - 1];
+       }
+   }
+   //数学方法
+   class Solution {
+       public int uniquePaths(int m, int n) {
+           int S = m + n - 2;  // 总共的移动次数
+           int D = m - 1;      // 向下的移动次数
+           long ret = 1;
+           for (int i = 1; i <= D; i++) {
+               ret = ret * (S - D + i) / i;
+           }
+           return (int) ret;
+       }
+   }
    ```
-
+   
    
 
 #### 数组区间
 
-1. 数组区间和
+1. 数组区间和--198--Easy
 
    ```java
    
@@ -2536,7 +2656,7 @@
 
    
 
-2. 数组中等差递增子区间的个数
+2. 数组中等差递增子区间的个数--198--Easy
 
    ```java
    
@@ -2546,7 +2666,7 @@
 
 #### 分割整数
 
-1. 分割整数的最大乘积
+1. 分割整数的最大乘积--198--Easy
 
    ```java
    
@@ -2554,7 +2674,7 @@
 
    
 
-2. 按平方数来分割整数
+2. 按平方数来分割整数--198--Easy
 
    ```java
    
@@ -2562,7 +2682,7 @@
 
    
 
-3. 分割整数构成字母字符串
+3. 分割整数构成字母字符串--198--Easy
 
    ```java
    
@@ -2572,7 +2692,7 @@
 
 #### 最长递增子序列
 
-1. 最长递增子序列
+1. 最长递增子序列--198--Easy
 
    ```java
    
@@ -2580,7 +2700,7 @@
 
    
 
-2. 一组整数对能够构成的最长链
+2. 一组整数对能够构成的最长链--198--Easy
 
    ```java
    
@@ -2588,7 +2708,7 @@
 
    
 
-3. 最长摆动子序列
+3. 最长摆动子序列--198--Easy
 
    ```java
    
@@ -2598,7 +2718,7 @@
 
 #### 最长公共子序列
 
-1. 最长公共子序列
+1. 最长公共子序列--198--Easy
 
    ```java
    
@@ -2608,7 +2728,7 @@
 
 #### 0-1背包
 
-1. 划分数组为和相等的两部分
+1. 划分数组为和相等的两部分--198--Easy
 
    ```java
    
@@ -2616,7 +2736,7 @@
 
    
 
-2. 改变一组数的正负号使得它们的和为一给定数
+2. 改变一组数的正负号使得它们的和为一给定数--198--Easy
 
    ```java
    
@@ -2624,7 +2744,7 @@
 
    
 
-3. 01 字符构成最多的字符串
+3. 01 字符构成最多的字符串--198--Easy
 
    ```java
    
@@ -2632,7 +2752,7 @@
 
    
 
-4. 找零钱的最少硬币数
+4. 找零钱的最少硬币数--198--Easy
 
    ```java
    
@@ -2640,7 +2760,7 @@
 
    
 
-5. 找零钱的硬币数组合
+5. 找零钱的硬币数组合--198--Easy
 
    ```java
    
@@ -2648,7 +2768,7 @@
 
    
 
-6. 字符串按单词列表分割
+6. 字符串按单词列表分割--198--Easy
 
    ```java
    
@@ -2656,7 +2776,7 @@
 
    
 
-7. 组合总和
+7. 组合总和--198--Easy
 
    ```java
    
@@ -2666,7 +2786,7 @@
 
 #### 股票交易
 
-1. 需要冷却期的股票交易
+1. 需要冷却期的股票交易--198--Easy
 
    ```java
    
@@ -2674,7 +2794,7 @@
 
    
 
-2. 需要交易费用的股票交易
+2. 需要交易费用的股票交易--198--Easy
 
    ```java
    
@@ -2682,7 +2802,7 @@
 
    
 
-3. 只能进行两次的股票交易
+3. 只能进行两次的股票交易--198--Easy
 
    ```java
    
@@ -2690,7 +2810,7 @@
 
    
 
-4. 只能进行 k 次的股票交易
+4. 只能进行 k 次的股票交易--198--Easy
 
    ```java
    
@@ -2700,7 +2820,7 @@
 
 #### 字符串编辑
 
-1. 删除两个字符串的字符使它们相等
+1. 删除两个字符串的字符使它们相等--198--Easy
 
    ```java
    
@@ -2708,7 +2828,7 @@
 
    
 
-2. 编辑距离
+2. 编辑距离--198--Easy
 
    ```java
    
@@ -2716,7 +2836,7 @@
 
    
 
-3. 复制粘贴字符
+3. 复制粘贴字符--198--Easy
 
    ```java
    
