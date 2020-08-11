@@ -675,17 +675,51 @@
 3. 非递归实现二叉树的中序遍历--94--Medium
 
    ```java
-   
+   class Solution {
+       public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ret = new ArrayList<>();
+           if (root == null) return ret;
+           Stack<TreeNode> stack = new Stack<>();
+           TreeNode cur = root;
+           while(cur != null || !stack.isEmpty()){
+               //先将左子节点入栈
+               while (cur != null){
+                   stack.push(cur);
+                   cur = cur.left;
+               }
+               //存入节点的值，下一轮遍历右子节点
+               TreeNode node = stack.pop();
+               ret.add(node.val);
+               cur = node.right;
+           }
+           return ret;
+       }
+   }
    ```
-
+   
    
 
 #### BST
 
+>二叉查找树（BST）：根节点大于等于左子树所有节点，小于等于右子树所有节点。
+>
+>二叉查找树中序遍历有序。
+
 1. 修剪二叉查找树--669--Easy
 
    ```java
-   
+   class Solution {
+       public TreeNode trimBST(TreeNode root, int L, int R) {
+           if (root == null) return null;
+           if (root.val > R) 
+               return trimBST(root.left, L, R);
+           if (root.val < L) 
+               return trimBST(root.right, L, R);
+           root.left = trimBST(root.left, L, R);
+           root.right = trimBST(root.right, L, R);
+           return root;
+       }
+   }
    ```
 
    
@@ -701,7 +735,22 @@
 3. 把二叉查找树每个节点的值都加上比它大的节点的值--538--Easy
 
    ```java
-   
+   class Solution {
+       int sum = 0;
+       public TreeNode convertBST(TreeNode root) {
+           if (root != null) {
+               //遍历右子树
+               convertBST(root.right);
+               //遍历顶点
+               root.val = root.val + sum;
+               sum = root.val;
+               //遍历左子树
+               convertBST(root.left);
+               return root;
+           }
+           return null;
+       }
+   }
    ```
 
    
@@ -709,7 +758,22 @@
 4. 二叉查找树的最近公共祖先--235--Easy
 
    ```java
-   
+   class Solution {
+       public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+           //当p和q节点等于root节点，直接返回root
+           if (p.val==root.val || q.val==root.val){
+               return root;
+           }
+           //递归求解
+           if (p.val > root.val && q.val > root.val) {//p和q节点都大于root，则说明p和q为root的右子节点
+               return lowestCommonAncestor(root.right,p,q);
+           }else if (p.val < root.val && q.val < root.val) {//p和q节点都大于root，则说明p和q为root的右子节点
+               return lowestCommonAncestor(root.left,p,q);
+           }else{//其他情况均为root节点为最大父节点
+               return root;
+           }
+       }
+   }
    ```
 
    
@@ -725,7 +789,23 @@
 6. 从有序数组中构造二叉查找树--108--Easy
 
    ```java
+   class Solution {
+       public TreeNode sortedArrayToBST(int[] nums) {
+           // 左右等分建立左右子树，中间节点作为子树根节点，递归该过程
+           return nums == null ? null : buildTree(nums, 0, nums.length - 1);
+       }
    
+       private TreeNode buildTree(int[] nums, int l, int r) {
+           if (l > r) {
+               return null;
+           }
+           int m = l + (r - l) / 2;
+           TreeNode root = new TreeNode(nums[m]);
+           root.left = buildTree(nums, l, m - 1);
+           root.right = buildTree(nums, m + 1, r);
+           return root;
+       }
+   }
    ```
 
    
@@ -763,6 +843,8 @@
     
 
 #### Trie
+
+Trie，又称前缀树或字典树，用于判断字符串是否存在或者是否具有某种字符串前缀。
 
 1. 实现一个 Trie--208--Medium
 
@@ -2648,7 +2730,7 @@
 
 #### 数组区间
 
-1. 数组区间和--198--Easy
+1. 数组区间和--303--Easy
 
    ```java
    
@@ -2656,7 +2738,7 @@
 
    
 
-2. 数组中等差递增子区间的个数--198--Easy
+2. 数组中等差递增子区间的个数--413--Medium
 
    ```java
    
@@ -2666,7 +2748,7 @@
 
 #### 分割整数
 
-1. 分割整数的最大乘积--198--Easy
+1. 分割整数的最大乘积--343--Medium
 
    ```java
    
@@ -2674,7 +2756,7 @@
 
    
 
-2. 按平方数来分割整数--198--Easy
+2. 按平方数来分割整数--279--Medium
 
    ```java
    
@@ -2682,7 +2764,7 @@
 
    
 
-3. 分割整数构成字母字符串--198--Easy
+3. 分割整数构成字母字符串--91--Medium
 
    ```java
    
@@ -2692,7 +2774,7 @@
 
 #### 最长递增子序列
 
-1. 最长递增子序列--198--Easy
+1. 最长递增子序列--300--Medium
 
    ```java
    
@@ -2700,7 +2782,7 @@
 
    
 
-2. 一组整数对能够构成的最长链--198--Easy
+2. 一组整数对能够构成的最长链--646--Medium
 
    ```java
    
@@ -2708,7 +2790,7 @@
 
    
 
-3. 最长摆动子序列--198--Easy
+3. 最长摆动子序列--366--Medium
 
    ```java
    
@@ -2718,7 +2800,7 @@
 
 #### 最长公共子序列
 
-1. 最长公共子序列--198--Easy
+1. 最长公共子序列--1143--Medium
 
    ```java
    
@@ -2728,7 +2810,7 @@
 
 #### 0-1背包
 
-1. 划分数组为和相等的两部分--198--Easy
+1. 划分数组为和相等的两部分--416--Medium
 
    ```java
    
@@ -2736,7 +2818,7 @@
 
    
 
-2. 改变一组数的正负号使得它们的和为一给定数--198--Easy
+2. 改变一组数的正负号使得它们的和为一给定数--494--Medium
 
    ```java
    
@@ -2744,7 +2826,7 @@
 
    
 
-3. 01 字符构成最多的字符串--198--Easy
+3. 01 字符构成最多的字符串--474--Medium
 
    ```java
    
@@ -2752,7 +2834,7 @@
 
    
 
-4. 找零钱的最少硬币数--198--Easy
+4. 找零钱的最少硬币数--322--Medium
 
    ```java
    
@@ -2760,7 +2842,7 @@
 
    
 
-5. 找零钱的硬币数组合--198--Easy
+5. 找零钱的硬币数组合--518--Medium
 
    ```java
    
@@ -2768,7 +2850,7 @@
 
    
 
-6. 字符串按单词列表分割--198--Easy
+6. 字符串按单词列表分割--139--Medium
 
    ```java
    
@@ -2776,7 +2858,7 @@
 
    
 
-7. 组合总和--198--Easy
+7. 组合总和--377--Medium
 
    ```java
    
@@ -2786,7 +2868,7 @@
 
 #### 股票交易
 
-1. 需要冷却期的股票交易--198--Easy
+1. 需要冷却期的股票交易--309--Medium
 
    ```java
    
@@ -2794,7 +2876,7 @@
 
    
 
-2. 需要交易费用的股票交易--198--Easy
+2. 需要交易费用的股票交易--714--Medium
 
    ```java
    
@@ -2802,7 +2884,7 @@
 
    
 
-3. 只能进行两次的股票交易--198--Easy
+3. 只能进行两次的股票交易--123--Hard
 
    ```java
    
@@ -2810,7 +2892,7 @@
 
    
 
-4. 只能进行 k 次的股票交易--198--Easy
+4. 只能进行 k 次的股票交易--188--Medium
 
    ```java
    
@@ -2820,7 +2902,7 @@
 
 #### 字符串编辑
 
-1. 删除两个字符串的字符使它们相等--198--Easy
+1. 删除两个字符串的字符使它们相等--583--Medium
 
    ```java
    
@@ -2828,7 +2910,7 @@
 
    
 
-2. 编辑距离--198--Easy
+2. 编辑距离--72--Hard
 
    ```java
    
@@ -2836,7 +2918,7 @@
 
    
 
-3. 复制粘贴字符--198--Easy
+3. 复制粘贴字符--650--Medium
 
    ```java
    

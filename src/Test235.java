@@ -1,11 +1,5 @@
 
 public class Test235 {
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode(int x) { val = x; }
-    }
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         //当p和q节点等于root节点，直接返回root
         if (p.val==root.val || q.val==root.val){
