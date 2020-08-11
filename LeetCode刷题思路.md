@@ -1862,52 +1862,185 @@
 1. 有序数组的 Two Sum--167--Easy
 
    ```java
+   //暴力
+   class Solution {
+       public int[] twoSum(int[] numbers, int target) {
+           int[] ans = new int[2];
+           int flag = 0;
+           for (int i = 0; i < numbers.length; i++) {
+               for (int j = i+1; j < numbers.length; j++) {
+                   if (numbers[i]+numbers[j] == target && i!=j) {
+                       ans[0]=i+1;
+                       ans[1]=j+1;
+                       flag = 1;
+                       break;
+                   }
+               }
+               if (flag==1){
+                   break;
+               }
+           }
+           return ans;
+       }
+   }
+   //双指针
    
    ```
 
    
 
-2. 两数平方和
+2. 两数平方和--633--Easy
 
    ```java
-   
+   class Solution {
+       public boolean judgeSquareSum(int c) {
+           if (c < 0) return false;
+           int i = 0, j = (int) Math.sqrt(c);
+           while (i <= j) {
+               int powSum = i * i + j * j;
+               if (powSum == c) {
+                   return true;
+               } else if (powSum > c) {
+                   j--;
+               } else {
+                   i++;
+               }
+           }
+           return false;
+       }
+   }
    ```
 
    
 
-3. 反转字符串中的元音字符
+3. 反转字符串中的元音字符--345--Easy
 
    ```java
-   
+   class Solution {
+       public String reverseVowels(String s) {
+           char[] letters = s.toCharArray();
+           //使用双指针
+           List<Character> letterList = new ArrayList<>();
+           char[] letter=new char[] {'a','e','i','o','u','A','E','I','O','U'};
+           int len = s.length();
+           int left = 0, right = len-1;
+           for(int i=0;i<10;i++)
+               letterList.add(letter[i]);
+           char temp;
+           while (left < right){
+               if (letterList.contains(letters[left]) && letterList.contains(letters[right])) {
+                   temp = letters[left];
+                   letters[left] = letters[right];
+                   letters[right] = temp;
+                   left++;
+                   right--;
+               }
+               else if (!letterList.contains(letters[left]) && letterList.contains(letters[right])) {
+                   left++;
+               }
+               else if (letterList.contains(letters[left]) && !letterList.contains(letters[right])) {
+                   right--;
+               }
+               else {
+                   left++;
+                   right--;
+               }
+           }
+           s = String.valueOf(letters);
+           return s;
+       }
+   }
    ```
 
    
 
-4. 回文字符串
+4. 回文字符串--680--Easy
 
    ```java
-   
+   class Solution {
+       public boolean validPalindrome(String s) {
+           for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+               //如果不想等，则分别删除两个字符查看剩余未检测的字符串是否回文
+               if (s.charAt(i) != s.charAt(j)) {
+                   return isPalindrome(s, i, j - 1) || isPalindrome(s, i + 1, j);
+               }
+           }
+           //s是回文直接返回true
+           return true;
+       }
+       //双指针判断是否回文
+       private boolean isPalindrome(String s, int i, int j) {
+           while (i < j) {
+               if (s.charAt(i++) != s.charAt(j--)) {
+                   return false;
+               }
+           }
+           return true;
+       }
+   }
    ```
 
    
 
-5. 归并两个有序数组
+5. 归并两个有序数组--88--Easy
 
    ```java
-   
+   class Solution {
+        public void merge(int[] nums1, int m, int[] nums2, int n) {
+           //先合并再排序
+           int len1 =nums1.length;
+           int k = 0;
+           for (int i = m; i < len1; i++) {
+              nums1[i] = nums2[k++];
+           }
+           Arrays.sort(nums1);
+       }
+   }
    ```
 
    
 
-6. 判断链表是否存在环
+6. 判断链表是否存在环--141--Easy
 
    ```java
-   
+   //hashset解法
+   class Solution {
+       public boolean hasCycle(ListNode head) {
+           HashSet<ListNode> nodesSeen = new HashSet<>();
+           while (head != null) {
+               //遍历每个节点，若此节点之前遍历过，则是环形链表
+               if (nodesSeen.contains(head)) {
+                   return true;
+               } else {
+                   nodesSeen.add(head);
+               }
+               head = head.next;
+           }
+           return false;
+       }
+   }
+   //使用双指针，一个指针每次移动一个节点，一个指针每次移动两个节点，如果存在环，那么这两个指针一定会相遇。
+   class Solution {
+       public boolean hasCycle(ListNode head) {
+           if (head == null) {
+           return false;
+       }
+       ListNode l1 = head, l2 = head.next;
+       while (l1 != null && l2 != null && l2.next != null) {
+           if (l1 == l2) {
+               return true;
+           }
+           l1 = l1.next;
+           l2 = l2.next.next;
+       }
+       return false;
+       }
+   }
    ```
 
    
 
-7. 最长子序列
+7. 最长子序列--524--Medium
 
    ```java
    
@@ -1927,7 +2060,15 @@
 
 #### 堆
 
-1. Kth Element
+用于求解   **TopK Elements**   问题，也就是 K 个最小元素的问题。可以维护一个大小为 K 的最小堆，最小堆中的元素就是最小元素。最小堆需要使用大顶堆来实现，大顶堆表示堆顶元素是堆中最大元素。这是因为我们要得到 k 个最小的元素，因此当遍历到一个新的元素时，需要知道这个新元素是否比堆中最大的元素更小，更小的话就把堆中最大元素去除，并将新元素添加到堆中。所以我们需要很容易得到最大元素并移除最大元素，大顶堆就能很好满足这个要求。
+
+堆也可以用于求解 Kth Element 问题，得到了大小为 k 的最小堆之后，因为使用了大顶堆来实现，因此堆顶元素就是第 k 大的元素。
+
+快速选择也可以求解 TopK Elements 问题，因为找到 Kth Element 之后，再遍历一次数组，所有小于等于 Kth Element 的元素都是 TopK Elements。
+
+可以看到，快速选择和堆排序都可以求解 Kth Element 和 TopK Elements 问题。
+
+1. Kth Element--215--Medium
 
    ```java
    
@@ -1937,7 +2078,7 @@
 
 #### 桶排序
 
-1. 出现频率最多的 k 个元素
+1. 出现频率最多的 k 个元素--347--Medium
 
    ```java
    
@@ -1945,7 +2086,7 @@
 
    
 
-2. 按照字符出现次数对字符串排序
+2. 按照字符出现次数对字符串排序--451--Medium
 
    ```java
    
@@ -1955,7 +2096,7 @@
 
 #### 荷兰国旗问题
 
-1. 按颜色进行排序
+1. 按颜色进行排序--75--Medium
 
    ```java
    
