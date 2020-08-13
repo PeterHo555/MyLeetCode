@@ -2460,7 +2460,23 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 3. 有序数组的 Single Element--540--Easy
 
    ```java
-   
+   class Solution {
+       public int singleNonDuplicate(int[] nums) {
+           int l = 0, r = nums.length - 1;//nums长度必为奇数
+           while (l < r) {
+               int mid = l + (r - l) / 2;
+               if (mid % 2 == 1) {
+                   mid--;   // 保证 l/h/m 都在偶数位，使得查找区间大小一直都是奇数
+               }
+               if (nums[mid] == nums[mid + 1]) {
+                   l = mid + 2;
+               } else {
+                   r = mid;
+               }
+           }
+           return nums[l];
+       }
+   }
    ```
 
    
@@ -2468,7 +2484,20 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 4. 第一个错误的版本--278--Easy
 
    ```java
-   
+   public class Solution extends VersionControl {
+       public int firstBadVersion(int n) {
+           int l = 1, r = n;
+           while (l < r) {
+               int mid = l + (r - l) / 2;
+               if (isBadVersion(mid)) {
+                   r = mid;
+               } else {
+                   l = mid + 1;
+               }
+           }
+           return l;   
+       }
+   }
    ```
 
    
@@ -2476,7 +2505,21 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 5. 旋转数组的最小数字--153--Easy
 
    ```java
-   
+   class Solution {
+       public int findMin(int[] nums) {
+           int l = 0, r = nums.length - 1;
+           while (l < r) {
+               int m = l + (r - l) / 2;
+               //由于元素是连续递增的，不重复且只有一处断点，用此条件可判断
+               if (nums[m] <= nums[r]) {
+                   r = m;
+               } else {
+                   l = m + 1;
+               }
+           }
+           return nums[l];
+       }
+   }
    ```
 
    

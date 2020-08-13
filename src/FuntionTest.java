@@ -97,9 +97,9 @@ public class FuntionTest {
 //       Test287 test287 = new Test287();
 //       int[] test = {1,3,4,2,3};
 //       test287.findDuplicate(test);
-        Test697 test697 = new Test697();
-        int[] test = {1,2,2,3,1,4,2};
-        test697.findShortestSubArray(test);
+        Test540 test540 = new Test540();
+        int[] test = {1,1,2,3,3,4,4,8,8};
+        test540.singleNonDuplicate(test);
 
 
     }
