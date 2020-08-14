@@ -16,16 +16,18 @@ public class Test34 {
             return - 1;
         int low = 0;
         int high = len - 1;
-        while(low <= high)
-        {
+        while(low <= high) {
             int mid = (low + high)/2;
+            //寻找到目标值，且当mid-1越界或a[mid-1]不等于目标值
             if (a[mid] == key && (mid - 1 < 0 || a[mid - 1] != key)) {
                 return mid;
             } else if (a[mid] >= key) {
                 high = mid - 1;
-            } else {
+            } else {//a[mid] < key 或 a[mid] == key && (mid - 1 >= 0 || a[mid - 1] == key))
                 low = mid + 1;
+
             }
+            System.out.println("findF   low的变化:"+low);
         }
         return -1;
     }
@@ -37,13 +39,16 @@ public class Test34 {
         int high = len - 1;
         while(low <= high){
             int mid = (low + high)/2;
+            //寻找到目标值，且当mid+1越界或a[mid+1]不等于目标值
             if (a[mid] == key && (mid + 1 >= len || a[mid + 1] != key)) {
                 return mid;
             } else if (a[mid] <= key) {
                 low = mid + 1;
-            } else {
+            } else {//a[mid] > key 或 a[mid] == key && (mid + 1 < len || a[mid + 1] == key)
                 high = mid - 1;
+
             }
+            System.out.println("findL   high的变化:"+high);
         }
         return -1;
     }

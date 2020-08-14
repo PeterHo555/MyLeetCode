@@ -97,10 +97,14 @@ public class FuntionTest {
 //       Test287 test287 = new Test287();
 //       int[] test = {1,3,4,2,3};
 //       test287.findDuplicate(test);
-        Test540 test540 = new Test540();
-        int[] test = {1,1,2,3,3,4,4,8,8};
-        test540.singleNonDuplicate(test);
-
+//        Test540 test540 = new Test540();
+//        int[] test = {1,1,2,3,3,4,4,8,8};
+//        test540.singleNonDuplicate(test);
+        Test34 test34 = new Test34();
+        int[] nums = {5,7,7,8,8,10};
+        int target = 8;
+        int[] ans = test34.searchRange(nums,target);
+        System.out.println(ans[0]+"::::"+ans[1]);
 
     }
 
