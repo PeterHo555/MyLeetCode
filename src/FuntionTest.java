@@ -101,7 +101,7 @@ public class FuntionTest {
 //        int[] test = {1,1,2,3,3,4,4,8,8};
 //        test540.singleNonDuplicate(test);
         Test34 test34 = new Test34();
-        int[] nums = {5,7,7,8,8,10};
+        int[] nums = {5,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,10};
         int target = 8;
         int[] ans = test34.searchRange(nums,target);
         System.out.println(ans[0]+"::::"+ans[1]);

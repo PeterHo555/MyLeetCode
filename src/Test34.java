@@ -25,9 +25,7 @@ public class Test34 {
                 high = mid - 1;
             } else {//a[mid] < key 或 a[mid] == key && (mid - 1 >= 0 || a[mid - 1] == key))
                 low = mid + 1;
-
             }
-            System.out.println("findF   low的变化:"+low);
         }
         return -1;
     }
@@ -48,7 +46,6 @@ public class Test34 {
                 high = mid - 1;
 
             }
-            System.out.println("findL   high的变化:"+high);
         }
         return -1;
     }
