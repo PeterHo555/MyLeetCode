@@ -871,7 +871,24 @@
 9. 在二叉查找树中查找两个节点之差的最小绝对值--530--Easy
 
    ```java
+   class Solution {
+   		private int minDiff = Integer.MAX_VALUE;
+       private TreeNode preNode = null;
    
+       public int getMinimumDifference(TreeNode root) {
+           inOrder(root);
+           return minDiff;
+       }
+       //中序遍历得到升序数列，每次计算两数之间最小值，取最小
+       private void inOrder(TreeNode node) {
+           if (node == null) return;
+           inOrder(node.left);
+           if (preNode != null)
+               minDiff = Math.min(minDiff, node.val - preNode.val);
+           preNode = node;
+           inOrder(node.right);
+       }
+   }
    ```
 
    
@@ -879,9 +896,44 @@
 10. 寻找二叉查找树中出现次数最多的值--501--Easy
 
     ```java
+    class Solution {
+        private int curCnt = 1;
+    private int maxCnt = 1;
+        private TreeNode preNode = null;
     
+        public int[] findMode(TreeNode root) {
+            List<Integer> maxCntNums = new ArrayList<>();
+            //引用maxCntNums
+            inOrder(root, maxCntNums);
+            int[] ret = new int[maxCntNums.size()];
+            //转成答案形式
+            for (int i = 0; i < maxCntNums.size(); i++)
+                ret[i] = maxCntNums.get(i);
+            return ret;
+        }
+        //中序遍历
+        private void inOrder(TreeNode node, List<Integer> nums) {
+            if (node == null) return;
+            inOrder(node.left, nums);
+            if (preNode != null) {
+                if (preNode.val == node.val) // 当前值与上一个结点值相同，当前值的出现次数增加。
+                    curCnt++;
+                else // 当前值与上一个结点值不同，重置计数
+                    curCnt = 1;
+            }
+            if (curCnt > maxCnt) {// 出现次数更多，清空之前的出现少的数，更新最大出现次数
+                maxCnt = curCnt;
+                nums.clear();//清空
+                nums.add(node.val);
+            } else if (curCnt == maxCnt) {// 不止一个众数
+                nums.add(node.val);
+            }
+            preNode = node;
+            inOrder(node.right, nums);
+        }
+    }
     ```
-
+    
     
 
 #### Trie
