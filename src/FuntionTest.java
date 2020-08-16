@@ -100,12 +100,23 @@ public class FuntionTest {
 //        Test540 test540 = new Test540();
 //        int[] test = {1,1,2,3,3,4,4,8,8};
 //        test540.singleNonDuplicate(test);
-        Test34 test34 = new Test34();
-        int[] nums = {5,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,10};
-        int target = 8;
-        int[] ans = test34.searchRange(nums,target);
-        System.out.println(ans[0]+"::::"+ans[1]);
-
+//        Test34 test34 = new Test34();
+//        int[] nums = {5,7,8,8,8,8,8,8,8,8,9,9,9,9,9,9,10};
+//        int target = 8;
+//        int[] ans = test34.searchRange(nums,target);
+//        System.out.println(ans[0]+"::::"+ans[1]);
+        Test733 test733 = new Test733();
+        int[][] testArr = {
+                {1,1,1},
+                {1,1,0},
+                {1,0,1}};
+        test733.floodFill(testArr,1,1,2);
+        for (int i = 0; i < testArr.length; i++) {
+            for (int j = 0; j < testArr[0].length; j++) {
+                System.out.print(testArr[i][j]);
+            }
+            System.out.println("");
+        }
     }
 
 }
