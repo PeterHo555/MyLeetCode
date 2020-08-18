@@ -802,7 +802,29 @@
 5. 二叉树的最近公共祖先--236--Medium
 
    ```java
-   
+   class Solution {
+       public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+           /**
+            注意p,q必然存在树内, 且所有节点的值唯一!!!
+            递归思想, 对以root为根的(子)树进行查找p和q, 如果root == null || p || q 直接返回root
+            表示对于当前树的查找已经完毕, 否则对左右子树进行查找, 根据左右子树的返回值判断:
+            1. 左右子树的返回值都不为null, 由于值唯一左右子树的返回值就是p和q, 此时root为LCA
+            2. 如果左右子树返回值只有一个不为null, 说明只有p和q存在与左或右子树中, 最先找到的那个节点为LCA
+            3. 左右子树返回值均为null, p和q均不在树中, 返回null
+            **/
+           if (root == null || root == p || root == q) return root;
+           TreeNode left = lowestCommonAncestor(root.left, p, q);
+           TreeNode right = lowestCommonAncestor(root.right, p, q);
+           if (left != null && right != null) {
+               return root;
+           } else if (left != null) {
+               return left;
+           } else if (right != null) {
+               return right;
+           }
+           return null;
+       }
+   }
    ```
 
    
@@ -834,7 +856,28 @@
 7. 根据有序链表构造平衡的二叉查找树--109--Medium
 
    ```java
-   
+   class Solution {
+       public TreeNode sortedListToBST(ListNode head) {
+           if(head == null) return null;
+           else if(head.next == null) return new TreeNode(head.val);
+           ListNode pre = head;
+           ListNode p = pre.next;
+           ListNode q = p.next;
+           //利用快慢指针法，找到链表的中点p
+           while(q!=null && q.next!=null){
+               pre = pre.next;
+               p = pre.next;
+               q = q.next.next;
+           }
+           //将中点左边的链表分开
+           pre.next = null;
+           //递归求两边的子树
+           TreeNode root = new TreeNode(p.val);
+           root.left = sortedListToBST(head);
+           root.right = sortedListToBST(p.next);
+           return root;
+       }
+   }·
    ```
 
    
@@ -1394,7 +1437,15 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 4. 两个字符串包含的字符是否完全相同--242--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isAnagram(String s, String t) {
+           char[] sChars = s.toCharArray();
+           char[] tChars = t.toCharArray();
+           Arrays.sort(sChars);
+           Arrays.sort(tChars);
+           return String.valueOf(sChars).equals(String.valueOf(tChars));
+       }
+   }
    ```
 
    
@@ -1402,7 +1453,22 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 5. 计算一组字符集合可以组成的回文字符串的最大长度--409--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isIsomorphic(String s, String t) {
+           int[] cnts = new int[256];
+           for (char c : s.toCharArray()) {
+               cnts[c]++;
+           }
+           int palindrome = 0;
+           for (int cnt : cnts) {
+               palindrome += (cnt / 2) * 2;
+           }
+           if (palindrome < s.length()) {
+               palindrome++;   // 这个条件下 s 中一定有单个未使用的字符存在，可以把这个字符放到回文的最中间
+           }
+           return palindrome;
+       }
+   }
    ```
 
    
@@ -1410,7 +1476,22 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 6. 字符串同构--205--Easy
 
    ```java
-   
+   class Solution {
+       //记录一个字符上次出现的位置，如果两个字符串中的字符上次出现的位置一样，那么就属于同构。
+       public boolean isIsomorphic(String s, String t) {
+           int[] preIndexOfS = new int[256];
+           int[] preIndexOfT = new int[256];
+           for (int i = 0; i < s.length(); i++) {
+               char sc = s.charAt(i), tc = t.charAt(i);
+               if (preIndexOfS[sc] != preIndexOfT[tc]) {
+                   return false;
+               }
+               preIndexOfS[sc] = i + 1;
+               preIndexOfT[tc] = i + 1;
+           }
+           return true;
+       }
+   }
    ```
 
    
@@ -1418,7 +1499,25 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 7. 回文子字符串个数--647--Medium
 
    ```java
+   class Solution {
+       private int ans = 0;
+       //从字符串的某一位开始，尝试着去扩展子字符串
+       public int countSubstrings(String s) {
+           for (int i = 0; i < s.length(); i++) {
+               extendSubstrings(s, i, i);     // 从当前字符开始奇数长度的回文数
+               extendSubstrings(s, i, i + 1); // 从当前字符与当前下一字符开始偶数长度的回文数
+           }
+           return ans;
+       }
    
+       private void extendSubstrings(String s, int start, int end) {
+           while (start >= 0 && end < s.length() && s.charAt(start) == s.charAt(end)) {
+               start--;
+               end++;
+               ans++;
+           }
+       }
+   }
    ```
 
    
@@ -1426,7 +1525,19 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 8. 判断一个整数是否是回文数--9--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isPalindrome(int x) {
+           if(x < 0)
+               return false;
+           int cur = 0;
+           int num = x;
+           while(num != 0) {
+               cur = cur * 10 + num % 10;
+               num /= 10;
+           }
+           return cur == x;
+       }
+   }
    ```
 
    
@@ -1434,9 +1545,29 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 9. 统计二进制字符串中连续 1 和连续 0 数量相同的子字符串个数--696--Easy
 
    ```java
-   
+   class Solution {
+       public int countBinarySubstrings(String s) {
+        int  n = s.length();
+           int pre = 0;
+           int curr = 1;
+           int ans = 0;
+           for (int i = 0; i < n - 1; i++) {
+               //记录当前相同字符个数
+               if (s.charAt(i) == s.charAt(i+1)) {
+                   curr++;
+               } else {
+                   pre = curr;
+                   curr = 1;
+               }
+               //当前相同字符个数与前一相同字符个数比较，若小于，则累加答案个数
+               if (pre >= curr)
+                   ans++;
+           }
+           return ans;
+       }
+   }
    ```
-
+   
    
 
 ---

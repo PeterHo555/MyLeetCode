@@ -105,18 +105,36 @@ public class FuntionTest {
 //        int target = 8;
 //        int[] ans = test34.searchRange(nums,target);
 //        System.out.println(ans[0]+"::::"+ans[1]);
-        Test733 test733 = new Test733();
-        int[][] testArr = {
-                {1,1,1},
-                {1,1,0},
-                {1,0,1}};
-        test733.floodFill(testArr,1,1,2);
-        for (int i = 0; i < testArr.length; i++) {
-            for (int j = 0; j < testArr[0].length; j++) {
-                System.out.print(testArr[i][j]);
-            }
-            System.out.println("");
-        }
+//        Test733 test733 = new Test733();
+//        int[][] testArr = {
+//                {1,1,1},
+//                {1,1,0},
+//                {1,0,1}};
+//        test733.floodFill(testArr,1,1,2);
+//        for (int i = 0; i < testArr.length; i++) {
+//            for (int j = 0; j < testArr[0].length; j++) {
+//                System.out.print(testArr[i][j]);
+//            }
+//            System.out.println("");
+//        }
+        Test109 test109 = new Test109();
+        ListNode node1 = new ListNode(1);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(3);
+        ListNode node4 = new ListNode(4);
+        ListNode node5 = new ListNode(5);
+        ListNode node6 = new ListNode(6);
+        ListNode node7 = new ListNode(7);
+        ListNode node8 = new ListNode(8);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+        node5.next = node6;
+        node6.next = node7;
+        node7.next = node8;
+        node8.next = null;
+        test109.sortedListToBST(node1);
     }
 
 }
