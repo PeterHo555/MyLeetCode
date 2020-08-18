@@ -1,6 +1,6 @@
 [toc]
 
-# PeterHo的LeetCode之旅
+# PeterHo的LeetCode笔记
 
 >本文从 Leetcode 中精选大概 200 左右的题目，去除了某些繁杂但是没有多少算法思想的题目，同时保留了面试中经常被问到的经典题目。
 
@@ -511,10 +511,27 @@
 
     
 
-12. 相同节点值的最大路径长度--678--Easy
+12. 相同节点值的最大路径长度--687--Easy
 
     ```java
+    class Solution {
+        private int path = 0;
     
+        public int longestUnivaluePath(TreeNode root) {
+            dfs(root);
+            return path;
+        }
+    
+        private int dfs(TreeNode root){
+            if (root == null) return 0;
+            int left = dfs(root.left);
+            int right = dfs(root.right);
+            int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0;
+            int rightPath = root.right != null && root.right.val == root.val ? right + 1 : 0;
+            path = Math.max(path, leftPath + rightPath);
+            return Math.max(leftPath, rightPath);
+        }
+    }
     ```
 
     
@@ -981,12 +998,68 @@
 
 #### Trie
 
-Trie，又称前缀树或字典树，用于判断字符串是否存在或者是否具有某种字符串前缀。
+><div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/5c638d59-d4ae-4ba4-ad44-80bdc30f38dd.jpg"/> </div><br>
+>
+>Trie，又称前缀树或字典树，用于判断字符串是否存在或者是否具有某种字符串前缀。
 
 1. 实现一个 Trie--208--Medium
 
    ```java
+   class Trie {
    
+       private class Node {
+           Node[] childs = new Node[26];
+           boolean isLeaf;
+       }
+   
+       private Node root = new Node();
+   
+       public Trie() {
+       }
+   
+       public void insert(String word) {
+           insert(word, root);
+       }
+   
+       private void insert(String word, Node node) {
+           if (node == null) return;
+           if (word.length() == 0) {
+               node.isLeaf = true;
+               return;
+           }
+           int index = indexForChar(word.charAt(0));
+           if (node.childs[index] == null) {
+               node.childs[index] = new Node();
+           }
+           insert(word.substring(1), node.childs[index]);
+       }
+   
+       public boolean search(String word) {
+           return search(word, root);
+       }
+   
+       private boolean search(String word, Node node) {
+           if (node == null) return false;
+           if (word.length() == 0) return node.isLeaf;
+           int index = indexForChar(word.charAt(0));
+           return search(word.substring(1), node.childs[index]);
+       }
+   
+       public boolean startsWith(String prefix) {
+           return startWith(prefix, root);
+       }
+   
+       private boolean startWith(String prefix, Node node) {
+           if (node == null) return false;
+           if (prefix.length() == 0) return true;
+           int index = indexForChar(prefix.charAt(0));
+           return startWith(prefix.substring(1), node.childs[index]);
+       }
+   
+       private int indexForChar(char c) {
+           return c - 'a';
+       }
+   }
    ```
 
    
@@ -994,9 +1067,59 @@ Trie，又称前缀树或字典树，用于判断字符串是否存在或者是�
 2. 实现一个 Trie，用来求前缀和--677--Medium
 
    ```java
+   class MapSum {
    
+    private class Node {
+           Node[] child = new Node[26];
+           int value;
+       }
+   
+       private Node root = new Node();
+   
+       public MapSum() {
+   
+       }
+   
+       public void insert(String key, int val) {
+           insert(key, root, val);
+       }
+   
+       private void insert(String key, Node node, int val) {
+           if (node == null) return;
+           if (key.length() == 0) {
+               node.value = val;
+               return;
+           }
+           int index = indexForChar(key.charAt(0));
+           if (node.child[index] == null) {
+               node.child[index] = new Node();
+           }
+           insert(key.substring(1), node.child[index], val);
+       }
+   
+       public int sum(String prefix) {
+           return sum(prefix, root);
+       }
+   
+       private int sum(String prefix, Node node) {
+           if (node == null) return 0;
+           if (prefix.length() != 0) {
+               int index = indexForChar(prefix.charAt(0));
+               return sum(prefix.substring(1), node.child[index]);
+           }
+           int sum = node.value;
+           for (Node child : node.child) {
+               sum += sum(prefix, child);
+           }
+           return sum;
+       }
+   
+       private int indexForChar(char c) {
+           return c - 'a';
+       }
+   }
    ```
-
+   
    
 
 ---
