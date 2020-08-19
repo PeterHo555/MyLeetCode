@@ -2588,7 +2588,19 @@
 5. 买卖股票最大的收益--121--Easy
 
    ```java
-   
+   class Solution {
+       public int maxProfit(int[] prices) {
+           //寻找最小的值，并在它之后找一个最大的值，取差值即为答案
+           int ans = 0;
+           int minPrice = Integer.MAX_VALUE;
+           for (int i = 0; i < prices.length; i++) {
+               if (prices[i] < minPrice)
+                   minPrice = prices[i];
+               ans = Math.max(ans, prices[i]-minPrice);
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -2596,7 +2608,19 @@
 6. 买卖股票的最大收益 II--122--Easy
 
    ```java
-   
+   class Solution {
+       public int maxProfit(int[] prices) {
+           //把问题看作每天都对股票买卖，有利益就在总数上累加
+           int sum = 0;
+           int temp = 0;
+           for (int i = 1; i < prices.length; i++) {
+               temp = prices[i]-prices[i-1];
+               if(temp > 0)
+                   sum += temp;
+           }
+           return sum;
+       }
+   }
    ```
 
    
@@ -2604,7 +2628,25 @@
 7. 种植花朵--605--Easy
 
    ```java
-   
+   class Solution {
+       public boolean canPlaceFlowers(int[] flowerbed, int n) {
+           int count = 0, len = flowerbed.length, pre, next;
+           for (int i = 0; i < len; i++) {
+               if (flowerbed[i] == 1)
+                   continue;
+               //判断此时的前一位与后一位是否越界
+               //判断此时的前一位与后一位是否种花
+               pre = i == 0 ? 0 : flowerbed[i - 1];
+               next = i == len - 1 ? 0 : flowerbed[i + 1];
+               if (pre == 0 && next == 0){
+                   //将此处种花，并计数
+                   count++;
+                   flowerbed[i] = 1;
+               }
+           }
+           return count >= n;
+       }
+   }
    ```
 
    
@@ -2612,7 +2654,16 @@
 8. 判断是否为子序列--329--Medium
 
    ```java
-   
+   class Solution {
+       public boolean isSubsequence(String s, String t) {
+           int cur=0;
+           //按顺序相等的字符数若等于s的长度，则为子序列
+           for (int i = 0; i < t.length()&& cur<s.length(); i++) {
+               if(t.charAt(i)==s.charAt(cur)) cur++;
+           }
+           return cur==s.length();
+       }
+   }
    ```
 
    
@@ -2620,7 +2671,28 @@
 9. 修改一个数成为非递减数组--665--Easy
 
    ```java
-   
+   class Solution {
+       public boolean checkPossibility(int[] nums) {
+           int cnt = 0;
+           for (int i = 1; i < nums.length && cnt < 2; i++) {
+               //非递减情况直接跳下一位
+               if (nums[i] >= nums[i - 1]) {
+                   continue;
+               }
+               //递减情况计数
+               cnt++;
+               //判断前两位是否大于当前位，
+               //是：修改i位为i-1
+               //否：修改i-1位为i
+               if (i - 2 >= 0 && nums[i - 2] > nums[i]) {
+                   nums[i] = nums[i - 1];
+               } else {
+                   nums[i - 1] = nums[i];
+               }
+           }
+           return cnt <= 1;
+       }
+   }
    ```
 
    
@@ -2628,7 +2700,23 @@
 10. 子数组最大的和--53--Easy
 
     ```java
-    
+    class Solution {
+        public int maxSubArray(int[] nums) {
+            int ans = nums[0];
+            int sum = 0;
+            for(int num: nums) {
+                //遍历每个元素，当sum大于0时与sum累加
+                //否则令sum等于num，意思是若最大自序和为负数，判断当前负元素是否为最大负元素
+                if(sum > 0) {
+                    sum += num;
+                } else {
+                    sum = num;
+                }
+                ans = Math.max(ans, sum);
+            }
+            return ans;
+        }
+    }
     ```
 
     
@@ -2636,9 +2724,38 @@
 11. 分隔字符串使同种字符出现在一起--763--Medium
 
     ```java
-    
+    class Solution {
+        public List<Integer> partitionLabels(String S) {
+         // 先用HashMap存每个字符对应的最后index;
+            List<Integer> res = new ArrayList<>();
+            HashMap<Character,Integer> map = new HashMap();
+            for(int i = 0; i < S.length(); i++){
+                map.put(S.charAt(i),i);
+            }
+            int firstIndex = 0;
+            while(firstIndex < S.length()){
+                //初始化当前的lastIndex，取当前字符的最后index
+                int lastIndex = map.get(S.charAt(firstIndex));
+                int currIndex = firstIndex;
+                //当某一区间内的字符的lastIndex小于当前的lastIndex
+                while(currIndex < lastIndex){
+                    //当前index表示的字符的最后index若大于当前lastIndex
+                    //则更新lastIndex为此字符的lastIndex
+                    if(map.get(S.charAt(currIndex)) > lastIndex){
+                        lastIndex = map.get(S.charAt(currIndex));
+                    }
+                    currIndex++;
+                }
+                //添加区间长度
+                res.add(lastIndex - firstIndex + 1);
+                //赋值下一区间的firstIndex
+                firstIndex = lastIndex + 1;
+            }
+            return res;
+        }
+    }
     ```
-
+    
     
 
 ---
