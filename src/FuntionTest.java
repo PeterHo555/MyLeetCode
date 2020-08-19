@@ -135,8 +135,13 @@ public class FuntionTest {
 //        node7.next = node8;
 //        node8.next = null;
 //        test109.sortedListToBST(node1);
-        Test279 test279 = new Test279();
-        test279.numSquares(12);
+//        Test279 test279 = new Test279();
+//        test279.numSquares(12);
+//        Test204 test204 = new Test204();
+//        test204.countPrimes(20);
+        int[] test = {1,2,3,4};
+        Test238 test238 = new Test238();
+        test238.productExceptSelf(test);
     }
 
 }

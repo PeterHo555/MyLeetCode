@@ -1533,31 +1533,7 @@
 
 ### 字符串
 
-1. 字符串循环移位包含--编程之美3.1
-
-   ```java
-   
-   ```
-
-   
-
-2. 字符串循环移位--编程之美2.17
-
-   ```java
-   
-   ```
-
-   
-
-3. 字符串中单词的翻转--程序员代码面试指南
-
-   ```java
-   
-   ```
-
-   
-
-4. 两个字符串包含的字符是否完全相同--242--Easy
+1. 两个字符串包含的字符是否完全相同--242--Easy
 
    ```java
    class Solution {
@@ -1573,7 +1549,7 @@
 
    
 
-5. 计算一组字符集合可以组成的回文字符串的最大长度--409--Easy
+2. 计算一组字符集合可以组成的回文字符串的最大长度--409--Easy
 
    ```java
    class Solution {
@@ -1596,7 +1572,7 @@
 
    
 
-6. 字符串同构--205--Easy
+3. 字符串同构--205--Easy
 
    ```java
    class Solution {
@@ -1619,7 +1595,7 @@
 
    
 
-7. 回文子字符串个数--647--Medium
+4. 回文子字符串个数--647--Medium
 
    ```java
    class Solution {
@@ -1645,7 +1621,7 @@
 
    
 
-8. 判断一个整数是否是回文数--9--Easy
+5. 判断一个整数是否是回文数--9--Easy
 
    ```java
    class Solution {
@@ -3808,7 +3784,24 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 生成素数序列--204--Easy
 
    ```java
-   
+   class Solution {
+       public int countPrimes(int n) {
+         //不是素数为true，默认为false
+           boolean[] notPrimes = new boolean[n + 1];
+           int count = 0;
+           for (int i = 2; i < n; i++) {
+               if (notPrimes[i]) {
+                   continue;
+               }
+               count++;
+               // 从 i * i 开始，因为如果 k < i，那么 k * i 在之前就已经被去除过了
+               for (long j = (long) (i) * i; j < n; j += i) {
+                   notPrimes[(int) j] = true;
+               }
+           }
+           return count;
+       }
+   }
    ```
 
    
@@ -3867,7 +3860,28 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 7 进制--504--Easy
 
    ```java
-   
+   class Solution {
+       public String convertToBase7(int num) {
+           if (num == 0) {
+               return "0";
+           }
+           StringBuilder sb = new StringBuilder();
+           //负数先转为整数求解
+           boolean isNegative = num < 0;
+           if (isNegative) {
+               num = -num;
+           }
+           while (num > 0) {
+               sb.append(num % 7);
+               num /= 7;
+           }
+           String ret = sb.reverse().toString();
+           return isNegative ? "-" + ret : ret;
+       }
+   //    public String convertToBase7(int num) {
+   //        return Integer.toString(num, 7);
+   //    }
+   }
    ```
 
    
@@ -3875,7 +3889,19 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 2. 16 进制--405--Easy
 
    ```java
-   
+   class Solution {
+       public String toHex(int num) {
+            //位运算
+           char[] map = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+           if (num == 0) return "0";
+           StringBuilder sb = new StringBuilder();
+           while (num != 0) {
+               sb.append(map[num & 0b1111]);
+               num >>>= 4; // 因为考虑的是补码形式，因此符号位就不能有特殊的意义，需要使用无符号右移，左边填 0
+           }
+           return sb.reverse().toString();
+       }
+   }
    ```
 
    
@@ -3883,9 +3909,20 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 3. 26 进制--168--Easy
 
    ```java
-   
+   class Solution {
+       public String convertToTitle(int n) {
+        StringBuilder str = new StringBuilder();
+           //转字符前插法
+           while (n != 0) {
+               n--;
+               str.insert(0, (char) (n % 26 + 65));
+               n /= 26;
+           }
+           return str.toString();
+       }
+   }
    ```
-
+   
    
 
 #### 阶乘
@@ -3893,9 +3930,19 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 统计阶乘尾部有多少个 0--172--Easy
 
    ```java
-   
+   class Solution {
+       //算一下乘法因子里有多少个5
+    public int trailingZeroes(int n) {
+           int count = 0;
+           while(n >= 5) {
+               count += n / 5;
+               n /= 5;
+           }
+           return count;
+       }
+   }
    ```
-
+   
    
 
 #### 字符串加法减法
@@ -3903,7 +3950,35 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 二进制加法--67--Easy
 
    ```java
-   
+   class Solution {
+       public String addBinary(String a, String b) {
+            int n = a.length(), m = b.length();
+           //长的放在前面
+           if (n < m)
+               return addBinary(b, a);
+           int L = Math.max(n, m);
+           StringBuilder sb = new StringBuilder();
+           int carry = 0, j = m - 1;
+           //计算过程
+           for(int i = L - 1; i >= 0; --i) {
+               if (a.charAt(i) == '1')
+                   ++carry;
+               if (j > -1 && b.charAt(j--) == '1')
+                   ++carry;
+               if (carry % 2 == 1)
+                   sb.append('1');
+               else
+                   sb.append('0');
+               carry /= 2;
+           }
+           //若最后多出一位carry，加入字符串
+           if (carry == 1)
+               sb.append('1');
+           //反转字符串得到答案
+           sb.reverse();
+           return sb.toString();
+       }
+   }
    ```
 
    
@@ -3911,9 +3986,26 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 2. 字符串加法--415--Easy
 
    ```java
-   
+   //字符串加法、链表加法以及二进制加法之类的都可以这么写
+   class Solution {
+    public String addStrings(String num1, String num2) {
+          StringBuilder sb = new StringBuilder();
+           int carry = 0, i = num1.length() - 1, j = num2.length() - 1;
+           //从末位开始相加，当两个字符串数下标>=0时，或者进位不为0时，
+           //计算当前位相加结果存入StringBuilder
+           while(i >= 0 || j >= 0 || carry != 0){
+               if(i >= 0)
+                   carry += num1.charAt(i--) - '0';
+               if(j >= 0)
+                   carry += num2.charAt(j--) - '0';
+               sb.append(carry%10);
+               carry /= 10;
+           }
+           return sb.reverse().toString();
+       }
+   }
    ```
-
+   
    
 
 #### 相遇问题
@@ -3921,9 +4013,22 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 改变数组元素使所有的数组元素都相等--462--Medium
 
    ```java
-   
+   class Solution {
+        public int minMoves2(int[] nums) {
+        //转成中位数的步数最少，可用数学证明
+           Arrays.sort(nums);
+           int move = 0;
+           int l = 0, h = nums.length - 1;
+           while (l <= h) {
+               move += nums[h] - nums[l];
+               l++;
+               h--;
+           }
+           return move;
+       }
+   }
    ```
-
+   
    
 
 #### 多数投票问题
@@ -3931,9 +4036,28 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 数组中出现次数多于 n / 2 的元素--169--Easy
 
    ```java
-   
+   class Solution {
+       public int majorityElement(int[] nums) {
+        //利用哈希表求解
+           HashMap<Integer,Integer> hashMap = new HashMap<>();
+           int count = 0;
+           int len = nums.length;
+           int ans = nums[0];
+           for (int i = 0; i < nums.length; i++) {
+               if (!hashMap.containsKey(nums[i])){
+                   hashMap.put(nums[i],1);
+               }else {
+                   count = hashMap.get(nums[i]);
+                   hashMap.put(nums[i],count+1);
+               }
+               if (hashMap.get(nums[i]) > len/2)
+                   ans = nums[i];
+           }
+           return ans;
+       }
+   }
    ```
-
+   
    
 
 #### 其它
@@ -3941,7 +4065,25 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 1. 平方数--367--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isPerfectSquare(int num) {
+           //牛顿迭代法
+           long r = num;
+           while (r * r > num) {
+               r = (r + num/r) /2;
+           }
+           return r * r == num;
+       }
+     
+       public boolean isPerfectSquare(int num) {
+           int subNum = 1;
+           while (num > 0) {
+               num -= subNum;
+               subNum += 2;
+           }
+           return num == 0;
+     	}
+   }
    ```
 
    
@@ -3949,7 +4091,15 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 2. 3 的 n 次方--326--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isPowerOfThree(int n) {
+           //通过查看相关解析，发现了这个解法，用到了数论的知识，
+           //3的幂次的质因子只有3，而所给出的n如果也是3的幂次，
+           //故而题目中所给整数范围内最大的3的幂次的因子只能是3的幂次，
+           //1162261467是3的19次幂，是整数范围内最大的3的幂次
+           return n > 0 && (1162261467 % n == 0);
+       }
+   }
    ```
 
    
@@ -3957,7 +4107,22 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 3. 乘积数组--238--Medium
 
    ```java
-   
+   class Solution {
+       public int[] productExceptSelf(int[] nums) {
+           int n=nums.length;
+           int left=1,right=1;     //left：从左边累乘，right：从右边累乘
+           int[] ans = new int[n];
+           Arrays.fill(ans, 1);
+           for(int i=0;i<n;++i){
+               //最终每个元素其左右乘积进行相乘得出结果
+               ans[i] *= left;       //乘以其左边的乘积
+               left *= nums[i];
+               ans[n - 1 - i] *= right;  //乘以其右边的乘积
+               right *= nums[n - 1 - i];
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -3965,9 +4130,20 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
 4. 找出数组中的乘积最大的三个数--628--Easy
 
    ```java
-   
+   class Solution {
+       public int maximumProduct(int[] nums) {
+        int ans = Integer.MIN_VALUE;
+           int len = nums.length;
+           Arrays.sort(nums);
+           //最大的三位数相乘
+           ans = Math.max(ans, nums[len-1] * nums[len-2] * nums[len-3]);
+           //如果有最小两个的负数的绝对值更大，那就负负得正再乘最大的数
+           ans = Math.max(ans, nums[0] * nums[1] * nums[len-1]);
+           return ans;
+       }
+   }
    ```
-
+   
    
 
 ---
