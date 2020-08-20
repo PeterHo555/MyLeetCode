@@ -139,9 +139,18 @@ public class FuntionTest {
 //        test279.numSquares(12);
 //        Test204 test204 = new Test204();
 //        test204.countPrimes(20);
-        int[] test = {1,2,3,4};
-        Test238 test238 = new Test238();
-        test238.productExceptSelf(test);
+//        int[] test = {1,2,3,4};
+//        Test238 test238 = new Test238();
+//        test238.productExceptSelf(test);
+
+//        int x = 1, y = 4;
+//        System.out.println(x^y);
+//        Test461 test461 = new Test461();
+//        int ans = test461.hammingDistance(3,4);
+//        System.out.println(ans);
+        for (int i = 1; i < 10; i++) {
+            System.out.println(i&(i-1));
+        }
     }
 
 }

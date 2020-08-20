@@ -13,9 +13,7 @@ public class Test238 {
             ans[n - 1 - i] *= right;  //乘以其右边的乘积
             right *= nums[n - 1 - i];
             for (int j = 0; j < n; j++) {
-                System.out.print(ans[j]+" ");
             }
-            System.out.println("");
         }
         return ans;
     }
