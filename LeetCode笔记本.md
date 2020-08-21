@@ -2212,7 +2212,16 @@ http://c.biancheng.net/view/784.html
 3. 找出数组中缺失的那个数--268--Easy
 
    ```java
-   
+   class Solution {
+       public int missingNumber(int[] nums) {
+           int ans = 0;
+           //对所有元素进行异或操作，相同元素的异或答案为0，所以结果最后为缺少的数
+           for (int i = 0; i < nums.length; i++) {
+               ans = ans ^ i ^ nums[i];
+           }
+           return ans ^ nums.length;
+       }
+   }
    ```
 
    
@@ -2220,7 +2229,23 @@ http://c.biancheng.net/view/784.html
 4. 数组中不重复的两个元素--260--Easy
 
    ```java
-   
+   class Solution {
+       public int[] singleNumber(int[] nums) {
+           //两个不相等的元素在位级表示上必定会有一位存在不同。
+           //将数组的所有元素异或得到的结果为不存在重复的两个元素异或的结果。
+           //diff &= -diff 得到出 diff 最右侧不为 0 的位，
+           //也就是不存在重复的两个元素在位级表示上最右侧不同的那一位，利用这一位就可以将两个元素区分开来。
+           int diff = 0;
+           for (int num : nums) diff ^= num;
+           diff &= -diff;  // 得到最右一位
+           int[] ret = new int[2];
+           for (int num : nums) {
+               if ((num & diff) == 0) ret[0] ^= num;
+               else ret[1] ^= num;
+           }
+           return ret;
+       }
+   }
    ```
 
    
@@ -2228,20 +2253,17 @@ http://c.biancheng.net/view/784.html
 5. 翻转一个数的比特位--190--Easy
 
    ```java
-   
+   class Solution {
+       // you need treat n as an unsigned value
+       public int reverseBits(int n) {
+           return Integer.reverse(n);
+       }
+   }
    ```
 
    
 
-6. 不用额外变量交换两个整数--程序员面试指南--P317
-
-   ```java
-   
-   ```
-
-   
-
-7. 判断一个数是不是 2 的 n 次方--231--Easy
+6. 判断一个数是不是 2 的 n 次方--231--Easy
 
    ```java
    class Solution {
@@ -2251,31 +2273,63 @@ http://c.biancheng.net/view/784.html
            if(n==0 || n%2!=0) return false;
            return isPowerOfTwo(n/2);
        }
+     
+       public boolean isPowerOfTwo(int n) {
+         	return n > 0 && (n & (n - 1)) == 0;
+     	}
    }
    ```
 
    
 
-8. 判断一个数是不是 4 的 n 次方--342--Easy
+7. 判断一个数是不是 4 的 n 次方--342--Easy
 
    ```java
-   
+   class Solution {
+       public boolean isPowerOfFour(int num) {
+           //这种数在二进制表示中有且只有一个奇数位为 1，例如 16（10000）。
+           return num > 0 && (num & (num - 1)) == 0 && (num & 0b01010101010101010101010101010101) != 0;
+       }
+   }
    ```
 
    
 
-9. 判断一个数的位级表示是否不会出现连续的 0 和 1--693--Easy
+8. 判断一个数的位级表示是否不会出现连续的 0 和 1--693--Easy
 
    ```java
-   
+   class Solution {
+       public boolean hasAlternatingBits(int n) {
+           //对于 1010 这种位级表示的数，把它向右移动 1 位得到 101，这两个数每个位都不同，因此异或得到的结果为 1111。
+           int a = (n ^ (n >> 1));
+           return (a & (a + 1)) == 0;
+       }
+   }
    ```
 
    
 
-10. 求一个数的补码--476--Easy
+9. 求一个数的补码--476--Easy
 
     ```java
+    class Solution {
+        //对于 00000101，要求补码可以将它与 00000111 进行异或操作。那么问题就转换为求掩码 00000111
+        public int findComplement(int num) {
+            if (num == 0) return 1;
+            int mask = 1 << 30;
+            while ((num & mask) == 0) mask >>= 1;
+            mask = (mask << 1) - 1;
+            return num ^ mask;
+        }
     
+        //可以利用 Java 的 Integer.highestOneBit() 方法来获得含有首 1 的数。
+        public int findComplement(int num) {
+            if (num == 0) return 1;
+            int mask = Integer.highestOneBit(num);
+            mask = (mask << 1) - 1;
+            return num ^ mask;
+        }
+    }
     ```
 
     
@@ -2294,20 +2348,54 @@ http://c.biancheng.net/view/784.html
 
     
 
-12. 字符串数组最大乘积--318--Easy
+11. 字符串数组最大乘积--318--Medium
+
+     ```java
+     class Solution {
+         public int maxProduct(String[] words) {
+             /**
+             全是小写字母, 可以用一个32为整数表示一个word中出现的字母, 
+             hash[i]存放第i个单词出现过的字母, a对应32位整数的最后一位,
+             b对应整数的倒数第二位, 依次类推. 时间复杂度O(N^2)
+             判断两两单词按位与的结果, 如果结果为0且长度积大于最大积则更新
+             **/
+             int n = words.length;
+             int[] hash = new int[n];
+             int max = 0;
+             for(int i = 0; i < n; ++i) {
+                 for(char c : words[i].toCharArray())
+                     hash[i] |= 1 << (c-'a');
+             }
+             
+             for(int i = 0; i < n-1; ++i) {
+                 for(int j = i+1; j < n; ++j) {
+                     if((hash[i] & hash[j]) == 0)
+                         max = Math.max(words[i].length() * words[j].length(), max);
+                 }
+             }
+             return max;
+         }
+     }
+     ```
+
+     
+
+13. 统计从 0 \~ n 每个数的二进制表示中 1 的个数--338--Medium
 
     ```java
-    
+    class Solution {
+        public int[] countBits(int num) {
+        //对于数字 6(110)，它可以看成是 4(100) 再加一个 2(10)，
+            //因此 dp[i] = dp[i&(i-1)] + 1;
+            int[] ret = new int[num + 1];
+            for(int i = 1; i <= num; i++){
+                ret[i] = ret[i&(i-1)] + 1;
+            }
+            return ret;
+        }
+    }
     ```
-
     
-
-13. 统计从 0 \~ n 每个数的二进制表示中 1 的个数--318--Medium
-
-    ```java
-    
-    ```
-
     
 
 ---

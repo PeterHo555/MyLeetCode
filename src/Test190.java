@@ -6,10 +6,12 @@ public class Test190 {
 
     // you need treat n as an unsigned value
     public int reverseBits(int n) {
-        int a=0;
-        for(int i=0;i<=31;i++){
-            a=a+((1&(n>>i))<<(31-i));
+        int ret = 0;
+        for (int i = 0; i < 32; i++) {
+            ret <<= 1;
+            ret |= (n & 1);
+            n >>>= 1;
         }
-        return a;
+        return ret;
     }
 }
