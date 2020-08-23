@@ -148,9 +148,15 @@ public class FuntionTest {
 //        Test461 test461 = new Test461();
 //        int ans = test461.hammingDistance(3,4);
 //        System.out.println(ans);
-        for (int i = 1; i < 10; i++) {
-            System.out.println(i&(i-1));
-        }
+//        for (int i = 1; i < 10; i++) {
+//            System.out.println(i&(i-1));
+//        }
+//        Test201 test201 = new Test201();
+//        int ans = test201.rangeBitwiseAnd(5,7);
+//        System.out.println(ans);
+        Test279 test279 = new Test279();
+        int ans = test279.numSquares(13);
+        System.out.println(ans);
     }
 
 }

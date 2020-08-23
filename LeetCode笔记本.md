@@ -2002,7 +2002,7 @@
 
 ---
 
-### 图
+### 图 - 未写
 
 #### 二分图
 
@@ -2630,7 +2630,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 排序
+### 排序 - 未写
 
 #### 快速选择
 
@@ -2686,7 +2686,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 贪心思想
+### 贪心思想 - 未写完
 
 1. 分配饼干--455--Easy
 
@@ -3176,7 +3176,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 分治
+### 分治 - 未写
 
 1. 给表达式加括号--241--Medium
 
@@ -3196,7 +3196,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 搜索
+### 搜索 - 未写完
 
 #### BFS
 
@@ -3278,7 +3278,86 @@ http://c.biancheng.net/view/784.html
 2. 组成整数的最小平方数数量--279--Medium
 
    ```java
+   //动态规划
+   class Solution {
+       // dp[i]：表示完全平方数和为i的 最小个数
+       // 初始状态dp[i]均取最大值i，即 1+1+...+1，i个1; dp[0] = 0
+       // dp[i] = min(dp[i], dp[i-j*j]+1)，其中, j是平方数, j=1~k,其中k*k要保证 <= i
+       // 意思就是：完全平方数和为i的 最小个数 等于 当前完全平方数和为i的 最大个数
+       //   与 （完全平方数和为 i - j * j 的 最小个数 + 完全平方数和为 j * j的 最小个数）
+       //   可以看到 dp[j*j] 是等于1的
+       public int numSquares(int n) {
+           int[] dp = new int[n + 1]; // 默认初始化值都为0
+           for (int i = 1; i <= n; i++) {
+               dp[i] = i; // 最坏的情况就是每次+1
+               for (int j = 1; i - j * j >= 0; j++) {
+                   dp[i] = Math.min(dp[i], dp[i - j * j] + 1); // 动态转移方程
+               }
+           }
+           return dp[n];
+       }
+   }
    
+   //BFS
+   class Solution {
+       public int numSquares(int n) {
+           //生成小于n平方数序列
+           List<Integer> squares = generateSquares(n);
+           //BFS套路队列
+           Queue<Integer> queue = new LinkedList<>();
+           //标记数组
+           boolean[] marked = new boolean[n + 1];
+           //扔进起点
+           queue.add(n);
+           marked[n] = true;
+           int level = 0;
+           while (!queue.isEmpty()) {
+               int size = queue.size();
+               level++;
+               while (size-- > 0) {
+                   int cur = queue.poll();
+                   //遍历每个平方数，
+                   for (int s : squares) {
+                       int next = cur - s;
+                       //next小于0，不符合条件
+                       if (next < 0) {
+                           break;
+                       }
+                       //减至为0，返回level
+                       if (next == 0) {
+                           return level;
+                       }
+                       //此平方数已被标记，进行下一次循环
+                       if (marked[next]) {
+                           continue;
+                       }
+                       //标记当前数减去所有平方数的剩余数
+                       //并加入队列
+                       //将次数的所有剩余数加入队列，BFS思想
+                       marked[next] = true;
+                       queue.add(next);
+                   }
+               }
+           }
+           return n;
+       }
+   
+       /**
+        * 生成小于 n 的平方数序列
+        * @return 1,4,9,...
+        */
+       private List<Integer> generateSquares(int n) {
+           List<Integer> squares = new ArrayList<>();
+           int square = 1;
+           int diff = 3;
+           while (square <= n) {
+               squares.add(square);
+               square += diff;
+               diff += 2;
+           }
+           return squares;
+       }
+   }
    ```
 
    
@@ -3286,9 +3365,47 @@ http://c.biancheng.net/view/784.html
 3. 最短单词路径--127--Medium
 
    ```java
-   
+   class Solution {
+       //BFS的思想
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+           Queue<String> queue = new LinkedList<>();//少不了队列
+           queue.add(beginWord);//加入起始词
+           boolean[] marked = new boolean[wordList.size() + 1];//少不了标记
+           int layer = 1;//注意返回的是层数+1.所以这里直接放1了
+           while(!queue.isEmpty()) {//固定的层数记录形式
+               layer++;
+               int size = queue.size();
+               while (size-- > 0) {
+                   String cur = queue.poll();
+                   for (int i = 0; i < wordList.size(); i++) {
+                       if(marked[i])
+                           continue;
+                       String dic = wordList.get(i);
+                       if(canChange(dic, cur)) {
+                           //先到达endWord就是最快换取法
+                           if(dic.equals(endWord))
+                               return layer;
+                           //将当前词能改的词都存入队列
+                           queue.add(dic);
+                           marked[i] = true;
+                       }
+                   }
+               }
+           }
+           return 0;
+       }
+       //是否可以转换的辅助函数
+       public boolean canChange(String s, String t) {
+           int diff = 0;
+           for (int i = 0; i < s.length(); i++) {
+               if(s.charAt(i) != t.charAt(i))
+                   diff++;
+           }
+           return diff == 1;
+       }
+   }
    ```
-
+   
    
 
 #### DFS
@@ -3480,7 +3597,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 动态规划
+### 动态规划 - 未写完
 
 递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
 
