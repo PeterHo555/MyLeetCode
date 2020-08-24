@@ -3414,7 +3414,9 @@ http://c.biancheng.net/view/784.html
 >
 >广度优先搜索一层一层遍历，每一层得到的所有新节点，要用队列存储起来以备下一层遍历的时候再遍历。
 >
->而深度优先搜索在得到一个新节点时立即对新节点进行遍历：从节点 0 出发开始遍历，得到到新节点 6 时，立马对新节点 6 进行遍历，得到新节点 4；如此反复以这种方式遍历新节点，直到没有新节点了，此时返回。返回到根节点 0 的情况是，继续对根节点 0 进行遍历，得到新节点 2，然后继续以上步骤。
+>而深度优先搜索在得到一个新节点时立即对新节点进行遍历：从节点 0 出发开始遍历，得到到新节点 6 时，立马对新节点 6 进行遍历，得到新节点 4；如此反
+>
+>复以这种方式遍历新节点，直到没有新节点了，此时返回。返回到根节点 0 的情况是，继续对根节点 0 进行遍历，得到新节点 2，然后继续以上步骤。
 >
 >从一个节点出发，使用 DFS 对一个图进行遍历时，能够遍历到的节点都是从初始节点可达的，DFS 常用来求解这种   **可达性**   问题。
 >
@@ -3426,7 +3428,37 @@ http://c.biancheng.net/view/784.html
 1. 查找最大的连通面积--695--Medium
 
    ```java
+   class Solution {
+       private int m, n;
+       private int[][] direction = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
    
+       public int maxAreaOfIsland(int[][] grid) {
+           if (grid == null || grid.length == 0 ||grid[0].length ==0 )
+               return 0;
+           int maxArea = 0;
+           m = grid.length;
+           n = grid[0].length;
+           for (int i = 0; i < m; i++) {
+               for (int j = 0; j < n; j++) {
+                   maxArea = Math.max(maxArea, dfs(grid, i, j));
+               }
+           }
+           return maxArea;
+       }
+   
+       public int dfs(int[][] grid, int x, int y){
+           if (x < 0 || x >= m ||y < 0 || y >= n || grid[x][y] == 0)
+               return 0;
+           //置为0表示已经访问过
+           grid[x][y] = 0;
+           int area = 1;
+           //对四个方向进行dfs遍历
+           for (int[] d : direction) {
+               area += dfs(grid, x + d[0], y + d[1]);
+           }
+           return area;
+       }
+   }
    ```
 
    
@@ -3434,7 +3466,37 @@ http://c.biancheng.net/view/784.html
 2. 矩阵中的连通分量数目--200--Medium
 
    ```java
+   class Solution {
+       private int m, n;
+       private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
    
+       public int numIslands(char[][] grid) {
+           if (grid == null || grid.length == 0 || grid[0].length == 0)
+               return 0;
+           int ans  = 0;
+           m = grid.length;
+           n = grid[0].length;
+           for (int i = 0; i < m; i++) {
+               for (int j = 0; j < n; j++) {
+                   if (grid[i][j] == '1'){
+                       dfs(grid, i, j);
+                       ans++;
+                   }
+               }
+           }
+           return ans;
+       }
+   
+       private void dfs(char[][] grid, int x, int y){
+           if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != '1')
+               return;//不再符合岛的条件，回溯
+           //置为2标记为已经访问
+           grid[x][y] = '2';
+           for (int[] d : direction) {
+               dfs(grid, x + d[0], y + d[1]);
+           }
+       }
+   }
    ```
 
    
@@ -3442,7 +3504,36 @@ http://c.biancheng.net/view/784.html
 3. 好友关系的连通分量数目--547--Medium
 
    ```java
+   class Solution {
+       private int m;
    
+       public int findCircleNum(int[][] M) {
+           //注意：M[i][j]表达的意思是i和j是朋友
+           //可以看作无向图
+           if (M == null || M.length == 0 || M[0].length == 0)
+               return 0;
+           int ans  = 0;
+           m = M.length;
+           //使用一个visited数组, 依次判断每个节点, 
+           //如果其未访问, 朋友圈数加1并对该节点进行dfs搜索标记所有访问到的节点
+           boolean[] isVisited = new boolean[m];
+           for (int i = 0; i < m; i++) {
+               if (!isVisited[i]){
+                   dfs(M, i, isVisited);
+                   ans++;
+               }
+           }
+           return ans;
+       }
+   
+       private void dfs(int[][] M, int i, boolean[] isVisited){
+           isVisited[i] = true;
+           for (int j = 0; j < m; j++) {
+               if (M[i][j] == 1 && !isVisited[j])
+                   dfs(M, j, isVisited);
+           }
+       }
+   }
    ```
 
    
@@ -3450,7 +3541,51 @@ http://c.biancheng.net/view/784.html
 4. 填充封闭区域--130--Medium
 
    ```java
+   class Solution {
+       private int row, col;
+       private int[][] direction = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
    
+       public void solve(char[][] board) {
+           if (board == null || board.length == 0 || board[0].length == 0) {
+               return;
+           }
+   
+           row = board.length;
+           col = board[0].length;
+           //遍历边界，第0列和最后一列，标记所有未为X包围的O
+           for (int i = 0; i < row; i++) {
+               dfs(board, i, 0);
+               dfs(board, i, col - 1);
+           }
+           //遍历边界，第0行和最后一行，标记所有未为X包围的O
+           for (int i = 0; i < col; i++) {
+               dfs(board, 0, i);
+               dfs(board, row - 1, i);
+           }
+           //将未被标记的O全部改为X
+           for (int i = 0; i < row; i++) {
+               for (int j = 0; j < col; j++) {
+                   if (board[i][j] == 'T') {
+                       board[i][j] = 'O';
+                   } else if (board[i][j] == 'O') {
+                       board[i][j] = 'X';
+                   }
+               }
+           }
+       }
+   
+       private void dfs(char[][] board, int r, int c) {
+           if (r < 0 || r >= row || c < 0 || c >= col || board[r][c] != 'O') {
+               return;
+           }
+           //标记为'T'表示为已经访问过
+           board[r][c] = 'T';
+           //四个方向的遍历
+           for (int[] d : direction) {
+               dfs(board, r + d[0], c + d[1]);
+           }
+       }
+   }
    ```
 
    
@@ -3458,9 +3593,58 @@ http://c.biancheng.net/view/784.html
 5. 能到达的太平洋和大西洋的区域--417--Medium
 
    ```java
+   class Solution {
+       int row, col;
+    int[][] direction = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+       private int[][] matrix;
    
+       public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+           List<List<Integer>> ansList = new ArrayList<>();
+           if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+               return ansList;
+           row = matrix.length;
+           col = matrix[0].length;
+           this.matrix = matrix;//延伸至全局可用
+           boolean[][] canReachP = new boolean[row][col];
+           boolean[][] canReachA = new boolean[row][col];
+           //遍历边界，第0列和最后一列，
+           for (int i = 0; i < row; i++) {
+               dfs(canReachP, i, 0);//太平洋
+               dfs(canReachA, i, col - 1);//大西洋
+           }
+           //遍历边界，第0行和最后一行，
+           for (int i = 0; i < col; i++) {
+               dfs(canReachP, 0, i);//太平洋
+               dfs(canReachA, row - 1, i);//大西洋
+           }
+           //遍历所有点，将能流向大西洋和太平洋的存入ansList
+           for (int i = 0; i < row; i++) {
+               for (int j = 0; j < col; j++) {
+                   if (canReachP[i][j] && canReachA[i][j])
+                       ansList.add(Arrays.asList(i, j));
+               }
+           }
+           return ansList;
+       }
+   
+       private void dfs(boolean[][] canReach, int r, int c){
+           if (canReach[r][c])//标记过则回溯
+               return;
+           //标记
+           canReach[r][c] = true;
+           //对四个不同方向进行dfs遍历
+           for (int[] d : direction) {
+               int nextR = d[0] + r;
+               int nextC = d[1] + c;
+               //条件过滤
+               if (nextR < 0 || nextR >= row || nextC < 0 || nextC >= col || matrix[r][c] > matrix[nextR][nextC])
+                   continue;
+               dfs(canReach, nextR, nextC);
+           }
+       }
+   }
    ```
-
+   
    
 
 #### Backtracking

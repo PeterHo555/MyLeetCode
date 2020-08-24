@@ -154,9 +154,11 @@ public class FuntionTest {
 //        Test201 test201 = new Test201();
 //        int ans = test201.rangeBitwiseAnd(5,7);
 //        System.out.println(ans);
-        Test279 test279 = new Test279();
-        int ans = test279.numSquares(13);
-        System.out.println(ans);
+//        Test279 test279 = new Test279();
+//        int ans = test279.numSquares(13);
+//        System.out.println(ans);
+        String s = "ababababab";
+        System.out.println((s + s).indexOf(s, 1));
     }
 
 }
