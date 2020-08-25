@@ -157,8 +157,12 @@ public class FuntionTest {
 //        Test279 test279 = new Test279();
 //        int ans = test279.numSquares(13);
 //        System.out.println(ans);
-        String s = "ababababab";
-        System.out.println((s + s).indexOf(s, 1));
+//        String s = "ababababab";
+//        System.out.println((s + s).indexOf(s, 1));
+        Test491 test491 = new Test491();
+        int[] test = {4,6,7,7};
+        test491.findSubsequences(test);
+
     }
 
 }
