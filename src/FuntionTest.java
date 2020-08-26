@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class FuntionTest {
     public static void main(String[] args) {
 //        System.out.println(Math.pow(10, 2));
@@ -159,10 +161,16 @@ public class FuntionTest {
 //        System.out.println(ans);
 //        String s = "ababababab";
 //        System.out.println((s + s).indexOf(s, 1));
-        Test491 test491 = new Test491();
-        int[] test = {4,6,7,7};
-        test491.findSubsequences(test);
-
+//        Test491 test491 = new Test491();
+//        int[] test = {4,6,7,7};
+//        test491.findSubsequences(test);
+//        Test17 test17 = new Test17();
+//        List<String> ans = test17.letterCombinations("234");
+//        for (int i = 0; i < ans.size(); i++) {
+//            System.out.println(ans.get(i));
+//        }
+        Test93 test93 = new Test93();
+        test93.restoreIpAddresses("25525511135");
     }
 
 }

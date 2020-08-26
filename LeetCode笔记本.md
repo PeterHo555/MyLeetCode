@@ -3649,7 +3649,7 @@ http://c.biancheng.net/view/784.html
 
 #### Backtracking
 
->Backtracking（回溯）属于 DFS。
+>Backtracking（回溯）属于 DFS。回溯算法事实上就是在一个树形问题上做深度优先遍历，因此 **首先需要把问题转换为树形问题**。
 >
 >- 普通 DFS 主要用在   **可达性问题**  ，这种问题只需要执行到特点的位置然后返回即可。
 >- 而 Backtracking 主要用于求解   **排列组合**   问题，例如有 { 'a','b','c' } 三个字符，求解所有由这三个字符排列得到的字符串，这种问题在执行到特定的位置返回之后还会继续执行求解过程。
@@ -3664,7 +3664,7 @@ http://c.biancheng.net/view/784.html
    ```java
    class Solution {
        private String[] keys = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-       
+   
        public List<String> letterCombinations(String digits) {
            List<String> ans = new ArrayList<>();
            //判断临界情况
@@ -3675,6 +3675,8 @@ http://c.biancheng.net/view/784.html
        }
    
        private void doCombination(StringBuilder prefix, List<String> ans, String digits){
+           //当前字符穿长度等于数字组合长度
+           //表示当前是一种组合的答案，存入答案后回溯
            if (prefix.length() == digits.length()) {
                ans.add(prefix.toString());
                return;
@@ -3684,10 +3686,14 @@ http://c.biancheng.net/view/784.html
            //取出数字代表的字符
            String letters = keys[curDigits];
            for (char c : letters.toCharArray()) {
-               prefix.append(c);
+               prefix.append(c); //添加
                doCombination(prefix, ans, digits);
-               prefix.deleteCharAt(prefix.length() - 1);
+               //回溯去掉最后一位，接着起始前进一位
+               prefix.deleteCharAt(prefix.length() - 1); //删除
            }
+           //注意，遍历完当前letters后回溯到上一层的letters
+           //如，String为"234"，再遍历完"4"的首轮"ghi"后，自动回溯到"3"的"def"
+           //此时，"d"删去，存入"e"，然后接着遍历"4"的"ghi"
        }
    }
    ```
@@ -3697,7 +3703,78 @@ http://c.biancheng.net/view/784.html
 2. IP 地址划分--93--Medium
 
    ```java
+   class Solution {
+       public List<String> restoreIpAddresses(String s) {
+           List<String> addresses = new ArrayList<>();
+           StringBuilder tempAddress = new StringBuilder();
+           doRestore(0, tempAddress, addresses, s);
+           return addresses;
+       }
    
+       private void doRestore(int k, StringBuilder tempAddress, List<String> addresses, String s) {
+           //判断是否已经存了三位ip或剩余的s是否为0
+           if (k == 4 || s.length() == 0) {
+               //ip末尾
+               if (k == 4 && s.length() == 0) {
+                   addresses.add(tempAddress.toString());
+               }
+               return;
+           }
+           for (int i = 0; i < s.length() && i <= 2; i++) {
+               // 非0位存在第一位为0字符为非法ip
+               if (i != 0 && s.charAt(0) == '0') {
+                   break;
+               }
+               //取出后i位字符串
+               String part = s.substring(0, i + 1);
+               //转为整形判断是否小于等于255，为合法IP地址
+               if (Integer.valueOf(part) <= 255) {
+                   if (tempAddress.length() != 0) {
+                       part = "." + part;
+                   }
+                   tempAddress.append(part); // 添加
+                   doRestore(k + 1, tempAddress, addresses, s.substring(i + 1));
+                   tempAddress.delete(tempAddress.length() - part.length(), tempAddress.length()); // 删除
+               }
+           }
+       }
+   }
+   
+   //暴力
+   class Solution {
+       public List<String> restoreIpAddresses(String s) {
+           List<String> r = new ArrayList<>();
+           if(s.length() > 12) return r;
+           for(int i = 1; i < s.length() && i <= 3; ++i){
+               for(int j = i; j < s.length() && j <= i + 3; ++j){
+                   for(int k = j; k < s.length() && k <= j + 3; ++k){
+                       String s1 = s.substring(0, i);
+                       String s2 = s.substring(i, j);
+                       String s3 = s.substring(j, k);
+                       String s4 = s.substring(k);
+                       if(f(s1) && f(s2) && f(s3) && f(s4)){
+                           StringBuilder sb = new StringBuilder();
+                           sb.append(s1); sb.append(".");
+                           sb.append(s2); sb.append(".");
+                           sb.append(s3); sb.append(".");
+                           sb.append(s4);
+                           r.add(sb.toString());
+                       }
+                   }
+               }
+           }
+           return r;
+       }
+     
+       boolean f(String s){
+           if(s.length() == 0) return false;
+           if(s.length() == 1) return true;
+           if(s.length() > 3) return false;
+           if(s.charAt(0) == '0') return false;
+           if(Integer.parseInt(s) <= 255) return true;
+           return false;
+       }
+   }
    ```
 
    
@@ -3705,7 +3782,50 @@ http://c.biancheng.net/view/784.html
 3. 在矩阵中寻找字符串--79--Medium
 
    ```java
+   class Solution {
+       private int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+       private int row;
+       private int col;
    
+       public boolean exist(char[][] board, String word) {
+           if (board == null || board.length == 0)
+               return false;
+           row = board.length;
+           col = board[0].length;
+           boolean[][] visited = new boolean[row][col];
+           for (int i = 0; i < row; i++) {
+               for (int j = 0; j < col; j++) {
+                   if (backTracking(0, i, j, visited, board, word)) {
+                       return true;
+                   }
+               }
+           }
+           return false;
+       }
+   
+       private boolean backTracking(int curLen, int r, int c, boolean[][] visited, char[][] board, String word) {
+           //curLen从0开始，若与word长度相等，则证明前面各位字母相等，返回true
+           if (curLen == word.length()) {
+               return true;
+           }
+           //边界过滤条件
+           //判断单词的此位是否相等
+           if (r < 0 || r >= row || c < 0 || c >= col || board[r][c] != word.charAt(curLen) || visited[r][c]) {
+               return false;
+           }
+           //标记为已经访问
+           visited[r][c] = true;
+           //四个方向的回溯
+           for (int[] d : direction) {
+               if (backTracking(curLen + 1, r + d[0], c + d[1], visited, board, word)) {
+                   return true;
+               }
+           }
+           //下个起点可能需要再次访问此点，所以去除标记
+           visited[r][c] = false;
+           return false;
+       }
+   }
    ```
 
    
@@ -3713,7 +3833,47 @@ http://c.biancheng.net/view/784.html
 4. 输出二叉树中所有从根到叶子的路径--257--Easy
 
    ```java
+   class Solution {
+       public List<String> binaryTreePaths(TreeNode root) {
+           List<String> ans = new ArrayList<>();
+           if (root == null)
+               return ans;
+           List<Integer> values = new ArrayList<>();
+           backTracking(root, values, ans);
+           return ans;
+       }
    
+       //回溯
+       private void backTracking(TreeNode node, List<Integer> values, List<String> ans){
+           if (node == null) // 节点为空则回溯
+               return;
+           values.add(node.val);// 添加此时节点值
+           if (isLeft(node)){
+               ans.add(buildPath(values)); // 添加已有值的生成路径
+           } else {
+               backTracking(node.left, values, ans); // 回溯左子树
+               backTracking(node.right, values, ans); // 回溯右子树
+           }
+           values.remove(values.size() - 1); //删除此时节点值
+       }
+   
+       //判断是否是叶子节点
+       private boolean isLeft(TreeNode node){
+           return node.left == null && node.right == null;
+       }
+   
+       //构造答案所需的路径结构
+       private String buildPath(List<Integer> values){
+           StringBuilder sb = new StringBuilder();
+           for (int i = 0; i < values.size(); i++) {
+               sb.append(values.get(i));
+               if (i != values.size() - 1) {
+                   sb.append("->");
+               }
+           }
+           return sb.toString();
+       }
+   }
    ```
 
    
