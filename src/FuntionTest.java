@@ -169,8 +169,10 @@ public class FuntionTest {
 //        for (int i = 0; i < ans.size(); i++) {
 //            System.out.println(ans.get(i));
 //        }
-        Test93 test93 = new Test93();
-        test93.restoreIpAddresses("25525511135");
+//        Test93 test93 = new Test93();
+//        test93.restoreIpAddresses("25525511135");
+        Test39 test39 = new Test39();
+        test39.combinationSum(new int[]{2, 3, 6, 7},7);
     }
 
 }
