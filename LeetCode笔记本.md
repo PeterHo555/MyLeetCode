@@ -2002,7 +2002,7 @@
 
 ---
 
-### 图 - 未写
+### 图 - 未写4
 
 #### 二分图
 
@@ -2630,7 +2630,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 排序 - 未写
+### 排序 - 未写4
 
 #### 快速选择
 
@@ -2686,7 +2686,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 贪心思想 - 未写完
+### 贪心思想 - 未写完3
 
 1. 分配饼干--455--Easy
 
@@ -3176,7 +3176,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 分治 - 未写
+### 分治 - 未写2
 
 1. 给表达式加括号--241--Medium
 
@@ -3196,7 +3196,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 搜索 - 未写完
+### 搜索 - 未写完4
 
 #### BFS
 
@@ -4084,7 +4084,32 @@ http://c.biancheng.net/view/784.html
 10. 1-9 数字的组合求和--216--Medium
 
     ```java
+    class Solution {
+        public List<List<Integer>> combinationSum3(int k, int n) {
+            List<List<Integer>> combinations = new ArrayList<>();
+            List<Integer> path = new ArrayList<>();
+            backtracking(k, n, 1, path, combinations);
+            return combinations;
+        }
     
+        private void backtracking(int k, int n, int start, List<Integer> tempCombination, List<List<Integer>> combinations) {
+            //k剩余量与n剩余量都为0，是一种答案，存入后回溯
+            if (k == 0 && n == 0) {
+                combinations.add(new ArrayList<>(tempCombination));
+                return;
+            }
+            //此时不是答案，不用存入，但需回溯
+            if (k == 0 || n == 0) {
+                return;
+            }
+            for (int i = start; i <= 9; i++) {
+                tempCombination.add(i); // 添加
+                //对下一位进行组合
+                backtracking(k - 1, n - i, i + 1, tempCombination, combinations);
+                tempCombination.remove(tempCombination.size() - 1); // 删除
+            }
+        }
+    }
     ```
 
     
@@ -4092,7 +4117,28 @@ http://c.biancheng.net/view/784.html
 11. 子集--78--Medium
 
     ```java
+    class Solution {
+        public List<List<Integer>> subsets(int[] nums) {
+            List<List<Integer>> subsets = new ArrayList<>();
+            List<Integer> tempSubset = new ArrayList<>();
+            for (int size = 0; size <= nums.length; size++) {
+                backtracking(0, tempSubset, subsets, size, nums); // 不同的子集大小
+            }
+            return subsets;
+        }
     
+        private void backtracking(int start, List<Integer> tempSubset, List<List<Integer>> subsets, int size, int[] nums) {
+            if (tempSubset.size() == size) {
+                subsets.add(new ArrayList<>(tempSubset));
+                return;
+            }
+            for (int i = start; i < nums.length; i++) {
+                tempSubset.add(nums[i]);
+                backtracking(i + 1, tempSubset, subsets, size, nums);
+                tempSubset.remove(tempSubset.size() - 1);
+            }
+        }
+    }
     ```
 
     
@@ -4131,7 +4177,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 动态规划 - 未写完
+### 动态规划 - 未写完18
 
 递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
 

@@ -171,8 +171,12 @@ public class FuntionTest {
 //        }
 //        Test93 test93 = new Test93();
 //        test93.restoreIpAddresses("25525511135");
-        Test39 test39 = new Test39();
-        test39.combinationSum(new int[]{2, 3, 6, 7},7);
+//        Test39 test39 = new Test39();
+//        test39.combinationSum(new int[]{2, 3, 6, 7},7);
+//        Test214 test214 = new Test214();
+//        test214.shortestPalindrome("aacecaaa");
+        Test78 test78 = new Test78();
+        test78.subsets(new int[]{1, 2, 3});
     }
 
 }
