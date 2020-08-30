@@ -3176,12 +3176,48 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 分治 - 未写2
+### 分治
 
 1. 给表达式加括号--241--Medium
 
    ```java
+   class Solution {
+       public List<Integer> diffWaysToCompute(String input) {
+           List<Integer> ways = new ArrayList<>();
+           for (int i = 0; i < input.length(); i++) {
+               char c = input.charAt(i);
+               // 识别到运算符，分别递归计算运算符两侧的运算结果
+               if (c == '+' || c == '-' || c == '*') {
+                   // 获得所有的可行左运算结果
+                   List<Integer> left = diffWaysToCompute(input.substring(0, i));
+                   // 获得所有的可行右运算结果
+                   List<Integer> right = diffWaysToCompute(input.substring(i + 1));
+                   // 从左结果集合和右结果集合选出一个进行运算
+                   for (int l : left) {
+                       for (int r : right) {
+                           switch (c) {
+                               case '+':
+                                   ways.add(l + r);
+                                   break;
+                               case '-':
+                                   ways.add(l - r);
+                                   break;
+                               case '*':
+                                   ways.add(l * r);
+                                   break;
+                           }
+                       }
+                   }
    
+               }
+           }
+           //分治到最后 way长度为0，此时才能存入答案，return到上一层计算
+           if (ways.size() == 0) {
+               ways.add(Integer.valueOf(input));
+           }
+           return ways;
+       }
+   }
    ```
 
    
@@ -3189,9 +3225,42 @@ http://c.biancheng.net/view/784.html
 2. 不同的二叉搜索树--95--Medium
 
    ```java
-   
+   class Solution {
+       public List<TreeNode> generateTrees(int n) {
+        // 判断特殊情况
+           if (n < 1) {
+               return new LinkedList<TreeNode>();
+           }
+           return generateSubtrees(1, n);
+       }
+       // 分治的思想
+       private List<TreeNode> generateSubtrees(int s, int e) {
+           List<TreeNode> res = new LinkedList<TreeNode>();
+           if (s > e) {
+               res.add(null);
+               return res;
+           }
+           // 枚举可行根节点
+           for (int i = s; i <= e; ++i) {
+               // 获得所有的可行左子树
+               List<TreeNode> leftSubtrees = generateSubtrees(s, i - 1);
+               // 获得所有的可行右子树
+               List<TreeNode> rightSubtrees = generateSubtrees(i + 1, e);
+               // 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+               for (TreeNode left : leftSubtrees) {
+                   for (TreeNode right : rightSubtrees) {
+                       TreeNode root = new TreeNode(i);
+                       root.left = left;
+                       root.right = right;
+                       res.add(root);
+                   }
+               }
+           }
+           return res;
+       }
+   }
    ```
-
+   
    
 
 ---
@@ -4146,7 +4215,37 @@ http://c.biancheng.net/view/784.html
 12. 含有相同元素求子集--90--Medium
 
     ```java
+    class Solution {
+        public List<List<Integer>> subsetsWithDup(int[] nums) {
+            Arrays.sort(nums);
+            List<List<Integer>> subsets = new ArrayList<>();
+            List<Integer> tempSubset = new ArrayList<>();
+            boolean[] hasVisited = new boolean[nums.length];
+            for (int size = 0; size <= nums.length; size++) {
+                backtracking(0, tempSubset, subsets, hasVisited, size, nums); // 不同的子集大小
+            }
+            return subsets;
+        }
     
+        private void backtracking(int start, List<Integer> tempSubset, List<List<Integer>> subsets, boolean[] hasVisited, int size, int[] nums) {
+            if (tempSubset.size() == size) {
+                subsets.add(new ArrayList<>(tempSubset));
+                return;
+            }
+            // 某个num未被标记，但是与之前的num值相等，进行下一次循环
+            // 也可以用hashSet替代，但是效率低
+            for (int i = start; i < nums.length; i++) {
+                if (i != 0 && nums[i] == nums[i - 1] && !hasVisited[i - 1]) {
+                    continue;
+                }
+                tempSubset.add(nums[i]);
+                hasVisited[i] = true;
+                backtracking(i + 1, tempSubset, subsets, hasVisited, size, nums);
+                hasVisited[i] = false;
+                tempSubset.remove(tempSubset.size() - 1);
+            }
+        }
+    }
     ```
 
     
@@ -4154,7 +4253,39 @@ http://c.biancheng.net/view/784.html
 13. 分割字符串使得每个部分都是回文数--131--Medium
 
     ```java
+    class Solution {
+        public List<List<String>> partition(String s) {
+            List<List<String>> partitions = new ArrayList<>();
+            List<String> tempPartition = new ArrayList<>();
+            doPartition(s, partitions, tempPartition);
+            return partitions;
+        }
     
+        private void doPartition(String s, List<List<String>> partitions, List<String> tempPartition) {
+            if (s.length() == 0) {
+                partitions.add(new ArrayList<>(tempPartition));
+                return;
+            }
+            for (int i = 0; i < s.length(); i++) {
+                if (isPalindrome(s, 0, i)) {
+                    tempPartition.add(s.substring(0, i + 1)); // 添加
+                    //用substring方法切割子串 回溯
+                    doPartition(s.substring(i + 1), partitions, tempPartition);
+                    tempPartition.remove(tempPartition.size() - 1); // 删除
+                }
+            }
+        }
+    
+        //判断子串是否是回文
+        private boolean isPalindrome(String s, int begin, int end) {
+            while (begin < end) {
+                if (s.charAt(begin++) != s.charAt(end--)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
     ```
 
     

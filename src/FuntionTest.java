@@ -175,8 +175,11 @@ public class FuntionTest {
 //        test39.combinationSum(new int[]{2, 3, 6, 7},7);
 //        Test214 test214 = new Test214();
 //        test214.shortestPalindrome("aacecaaa");
-        Test78 test78 = new Test78();
-        test78.subsets(new int[]{1, 2, 3});
+//        Test78 test78 = new Test78();
+//        test78.subsets(new int[]{1, 2, 3});
+        Test241 test241 = new Test241();
+        String test = "2-1-1";
+        test241.diffWaysToCompute(test);
     }
 
 }
