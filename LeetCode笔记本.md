@@ -3265,7 +3265,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 搜索 - 未写完4
+### 搜索
 
 #### BFS
 
@@ -4293,7 +4293,64 @@ http://c.biancheng.net/view/784.html
 14. 数独--37--Hard
 
     ```java
+    class Solution {
+        private boolean[][] rowsUsed = new boolean[9][10];
+        private boolean[][] colsUsed = new boolean[9][10];
+        private boolean[][] cubesUsed = new boolean[9][10];
+        private char[][] board;
     
+        public void solveSudoku(char[][] board) {
+            this.board = board;
+            // 先将全部已经存入数值的点标记
+            for (int i = 0; i < 9; i++)
+                for (int j = 0; j < 9; j++) {
+                    if (board[i][j] == '.') {
+                        continue;
+                    }
+                    int num = board[i][j] - '0';
+                    rowsUsed[i][num] = true;
+                    colsUsed[j][num] = true;
+                    cubesUsed[cubeNum(i, j)][num] = true;
+                }
+            backtracking(0, 0);
+        }
+    
+        private boolean backtracking(int row, int col) {
+            // 搜寻空位置
+            while (row < 9 && board[row][col] != '.') {
+                // 如果col是最后一列，row++，col重新置为0，搜寻空位置
+                // col不是最后一列，row不变，col++，搜寻空位置
+                row = col == 8 ? row + 1 : row;
+                col = col == 8 ? 0 : col + 1;
+            }
+            // 搜索到最后一行+1，全部搜完了
+            if (row == 9) {
+                return true;
+            }
+            for (int num = 1; num <= 9; num++) {
+                if (rowsUsed[row][num] || colsUsed[col][num] || cubesUsed[cubeNum(row, col)][num]) {
+                    continue;
+                }
+                // 标记并存入数字的字符形式
+                rowsUsed[row][num] = colsUsed[col][num] = cubesUsed[cubeNum(row, col)][num] = true;
+                board[row][col] = (char) (num + '0');
+                // 回溯
+                if (backtracking(row, col)) {
+                    return true;
+                }
+                // 删除标记并置空
+                board[row][col] = '.';
+                rowsUsed[row][num] = colsUsed[col][num] = cubesUsed[cubeNum(row, col)][num] = false;
+            }
+            return false;
+        }
+        // 确定当前点的3*3模块
+        private int cubeNum(int i, int j) {
+            int r = i / 3;
+            int c = j / 3;
+            return r * 3 + c;
+        }
+    }
     ```
 
     
@@ -4301,9 +4358,106 @@ http://c.biancheng.net/view/784.html
 15. N 皇后--51--Hard
 
     ```java
-    
-    ```
+    class Solution {
+        private List<List<String>> output = new ArrayList<>();
 
+        // 用于标记是否被列方向的皇后被攻击
+        int[] rows;
+        // 用于标记是否被主对角线方向的皇后攻击
+        int[] mains;
+        // 用于标记是否被次对角线方向的皇后攻击
+        int[] secondary;
+        // 用于存储皇后放置的位置
+        int[] queens;
+    
+        int n;
+    
+        public List<List<String>> solveNQueens(int n) {
+            // 初始化
+            rows = new int[n];
+            mains = new int[2 * n - 1];
+            secondary = new int[2 * n - 1];
+            queens = new int[n];
+            this.n = n;
+    
+            // 从第一行开始回溯求解 N 皇后
+            backtrack(0);
+    
+            return output;    
+        }
+    
+        // 在一行中放置一个皇后
+        private void backtrack(int row) {
+            if (row >= n) return;
+            // 分别尝试在 row 行中的每一列中放置皇后
+            for (int col = 0; col < n; col++) {
+                // 判断当前放置的皇后不被其他皇后的攻击
+                if (isNotUnderAttack(row, col)) {
+                    // 选择，在当前的位置上放置皇后
+                    placeQueen(row, col);
+                    // 当当前行是最后一行，则找到了一个解决方案
+                    if (row == n - 1) addSolution();
+                    // 在下一行中放置皇后
+                    backtrack(row + 1);
+                    // 撤销，回溯，即将当前位置的皇后去掉
+                    removeQueen(row, col);
+                }
+            }
+        }
+    
+        // 判断 row 行，col 列这个位置有没有被其他方向的皇后攻击
+        private boolean isNotUnderAttack(int row, int col) {
+            // 判断的逻辑是：
+            //      1. 当前位置的这一列方向没有皇后攻击
+            //      2. 当前位置的主对角线方向没有皇后攻击
+            //      3. 当前位置的次对角线方向没有皇后攻击
+            int res = rows[col] + mains[row - col + n - 1] + secondary[row + col];
+            // 如果三个方向都没有攻击的话，则 res = 0，即当前位置不被任何的皇后攻击
+            return res == 0;
+        }
+    
+        // 在指定的位置上放置皇后
+        private void placeQueen(int row, int col) {
+            // 在 row 行，col 列 放置皇后
+            queens[row] = col;
+            // 当前位置的列方向已经有皇后了
+            rows[col] = 1;
+            // 当前位置的主对角线方向已经有皇后了
+            mains[row - col + n - 1] = 1;
+            // 当前位置的次对角线方向已经有皇后了
+            secondary[row + col] = 1;
+        }
+    
+        // 移除指定位置上的皇后
+        private void removeQueen(int row, int col) {
+            // 移除 row 行上的皇后
+            queens[row] = 0;
+            // 当前位置的列方向没有皇后了
+            rows[col] = 0;
+            // 当前位置的主对角线方向没有皇后了
+            mains[row - col + n - 1] = 0;
+            // 当前位置的次对角线方向没有皇后了
+            secondary[row + col] = 0;
+        }
+    
+        /**
+         * 将满足条件的皇后位置放入output中
+         */
+        public void addSolution() {
+            List<String> solution = new ArrayList<String>();
+            for (int i = 0; i < n; ++i) {
+                int col = queens[i];
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j < col; ++j) sb.append(".");
+                sb.append("Q");
+                for(int j = 0; j < n - col - 1; ++j) sb.append(".");
+                solution.add(sb.toString());
+            }
+            output.add(solution);
+        }
+    }
+    ```
+    
     
 
 ---
