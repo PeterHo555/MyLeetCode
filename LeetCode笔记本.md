@@ -2630,7 +2630,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 排序 - 未写4
+### 排序
 
 #### 快速选择
 
@@ -2651,9 +2651,25 @@ http://c.biancheng.net/view/784.html
 1. Kth Element--215--Medium
 
    ```java
-   
+   class Solution {
+       public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+           return nums[nums.length - k];
+       }
+     
+       public int findKthLargest(int[] nums, int k) {
+           //PriorityQueue使用跟普通队列一样，唯一区别是PriorityQueue会根据排序规则决定谁在队头，谁在队尾。
+           PriorityQueue<Integer> pq = new PriorityQueue<>(); // 小顶堆
+           for (int val : nums) {
+               pq.add(val);
+               if (pq.size() > k)  // 维护堆的大小为 K
+                   pq.poll();
+           }
+           return pq.peek();
+       }
+   }
    ```
-
+   
    
 
 #### 桶排序
@@ -2661,7 +2677,31 @@ http://c.biancheng.net/view/784.html
 1. 出现频率最多的 k 个元素--347--Medium
 
    ```java
-   
+   //经典自己写击败5%
+   class Solution {
+       public int[] topKFrequent(int[] nums, int k) {
+           Map<Integer, Integer> map = new HashMap<>();
+           for (int num : nums) {
+               map.put(num, map.getOrDefault(num, 0) + 1);
+           }
+           int [] ans = new int [k];
+           int max = 0;
+           int add_key = 0;
+           while(k > 0){
+               for(int key : map.keySet()){
+                   if(map.get(key) > max){
+                       max = map.get(key);
+                       add_key = key;
+                   }
+               }
+               k--;
+               ans[k] = add_key;
+               map.remove(add_key);
+               max = 0;
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -2669,9 +2709,42 @@ http://c.biancheng.net/view/784.html
 2. 按照字符出现次数对字符串排序--451--Medium
 
    ```java
-   
+   class Solution {
+       public String frequencySort(String s) {
+         // 统计所有字符出现的频率
+           Map<Character, Integer> map = new HashMap<>();
+           for (Character ch : s.toCharArray()) {
+               map.put(ch, map.getOrDefault(ch, 0) + 1);
+           }
+           List<Character>[] frequencyBucket = new ArrayList[s.length() + 1];
+           // 获取字符的频率
+           for (char c : map.keySet()) {
+               int f = map.get(c);
+               // 当前频率的list为空，则new一个list
+               if (frequencyBucket[f] == null) {
+                   frequencyBucket[f] = new ArrayList<>();
+               }
+               // 将所有出现频率一样的字符，add到同一个list
+               frequencyBucket[f].add(c);
+           }
+           StringBuilder str = new StringBuilder();
+           for (int i = frequencyBucket.length - 1; i >= 0; i--) {
+               // 字符不存在则continue
+               if (frequencyBucket[i] == null) {
+                   continue;
+               }
+               // 构成String
+               for (char c : frequencyBucket[i]) {
+                   for (int j = 0; j < i; j++) {
+                       str.append(c);
+                   }
+               }
+           }
+           return str.toString();
+       }
+   }
    ```
-
+   
    
 
 #### 荷兰国旗问题
@@ -2679,14 +2752,37 @@ http://c.biancheng.net/view/784.html
 1. 按颜色进行排序--75--Medium
 
    ```java
+   class Solution {
+       public void sortColors(int[] nums) {
+        //0，1，2 排序。一次遍历，如果是0，则移动到表头，如果是2，则移动到表尾，不用考虑1。
+           int low = 0, now = 0, high = nums.length - 1;
+           while (now <= high) {
+               if (nums[now] == 0) {
+                   swap(nums, low, now);
+                   low++;
+                   now++;
+               } else if (nums[now] == 2) {
+                   swap(nums, high, now);
+                   high--;
+               } else {
+                   now++;
+               }
+           }
+       }
    
+       private void swap(int[] nums, int i, int j) {
+           int t = nums[i];
+           nums[i] = nums[j];
+           nums[j] = t;
+       }
+   }
    ```
-
+   
    
 
 ---
 
-### 贪心思想 - 未写完3
+### 贪心思想 - 未写3
 
 1. 分配饼干--455--Easy
 
@@ -4462,7 +4558,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 动态规划 - 未写完18
+### 动态规划 - 未写18
 
 递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
 

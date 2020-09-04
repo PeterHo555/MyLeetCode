@@ -177,9 +177,18 @@ public class FuntionTest {
 //        test214.shortestPalindrome("aacecaaa");
 //        Test78 test78 = new Test78();
 //        test78.subsets(new int[]{1, 2, 3});
-        Test241 test241 = new Test241();
-        String test = "2-1-1";
-        test241.diffWaysToCompute(test);
+//        Test241 test241 = new Test241();
+//        String test = "2-1-1";
+//        test241.diffWaysToCompute(test);
+//        Test51 test51 = new Test51();
+//        List<List<String>> ans = test51.solveNQueens(4);
+//        for (List<String> temp : ans) {
+//            for (String temp2 : temp) {
+//                System.out.println(temp2);
+//            }
+//        }
+//    }
+        Test451 test451 = new Test451();
+        String ans = test451.frequencySort("tree");
     }
-
 }
