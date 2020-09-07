@@ -2782,7 +2782,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 贪心思想 - 未写3
+### 贪心思想
 
 1. 分配饼干--455--Easy
 
@@ -2810,7 +2810,27 @@ http://c.biancheng.net/view/784.html
 2. 不重叠的区间个数--435--Medium
 
    ```java
-   
+   class Solution {
+       public int eraseOverlapIntervals(int[][] intervals) {
+           if (intervals.length == 0) {
+               return 0;
+           }
+           // 根据每个区间的末尾元素排序，此处末尾为第1个
+           Arrays.sort(intervals, Comparator.comparingInt(o -> o[1]));
+           int cnt = 1;
+           int end = intervals[0][1];
+           for (int i = 1; i < intervals.length; i++) {
+               // 若此区间起始元素小于上一轮末尾元素，continue
+               if (intervals[i][0] < end) {
+                   continue;
+               }
+               // 此处更新末尾元素与不用删除的区间数
+               end = intervals[i][1];
+               cnt++;
+           }
+           return intervals.length - cnt;
+       }
+   }
    ```
 
    
@@ -2818,7 +2838,27 @@ http://c.biancheng.net/view/784.html
 3. 投飞镖刺破气球--425--Medium
 
    ```java
-   
+   class Solution {
+       public int findMinArrowShots(int[][] points) {
+           if (points.length == 0) {
+               return 0;
+           }
+           // 根据每行的末尾元素排序
+           Arrays.sort(points, Comparator.comparingInt(o -> o[1]));
+           int cnt = 1, end = points[0][1];
+           for (int i = 1; i < points.length; i++) {
+               // 若此区间起始元素小于等于上一轮末尾元素，continue
+               if (points[i][0] <= end) {
+                   continue;
+               }
+               // 此处更新末尾元素
+               // 累加需要的弓箭数
+               cnt++;
+               end = points[i][1];
+           }
+           return cnt;
+       }
+   }
    ```
 
    
@@ -2826,7 +2866,20 @@ http://c.biancheng.net/view/784.html
 4. 根据身高和序号重组队列--406--Medium
 
    ```java
-   
+   class Solution {
+       // 看不懂，CV大法好啊
+       public int[][] reconstructQueue(int[][] people) {
+           if (people == null || people.length == 0 || people[0].length == 0) {
+               return new int[0][0];
+           }
+           Arrays.sort(people, (a, b) -> (a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]));
+           List<int[]> queue = new ArrayList<>();
+           for (int[] p : people) {
+               queue.add(p[1], p);
+           }
+           return queue.toArray(new int[queue.size()][]);
+       }
+   }
    ```
 
    
