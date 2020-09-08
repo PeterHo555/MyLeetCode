@@ -4955,7 +4955,28 @@ http://c.biancheng.net/view/784.html
 1. 最长递增子序列--300--Medium
 
    ```java
-   
+   class Solution {
+       public int lengthOfLIS(int[] nums) {
+           int ans = 0;
+           int n = nums.length;
+           int[] dp = new int[n];
+           for (int i = 0; i < n; i++) {
+               int max = 1;
+               for (int j = 0; j < i; j++) {
+                   //
+                   if (nums[i] > nums[j]) {
+                       max = Math.max(max, dp[j] + 1);
+                   }
+               }
+               // 记录当前点的暂时最长递增子序列（到i点为止）
+               dp[i] = max;
+           }
+           for (int i = 0; i < n; i++) {
+               ans = Math.max(ans, dp[i]);
+           }
+           return ans;
+       }
+   }
    ```
 
    
@@ -4963,17 +4984,46 @@ http://c.biancheng.net/view/784.html
 2. 一组整数对能够构成的最长链--646--Medium
 
    ```java
-   
+   class Solution {
+       public int findLongestChain(int[][] pairs) {
+           // 经典根据第二项排
+           Arrays.sort(pairs, Comparator.comparingInt(o -> o[1]));
+           int res = 1, tmp = pairs[0][1];
+           for(int i = 1;i < pairs.length;i++){
+               if(pairs[i][0] > tmp){
+                   res++;
+                   tmp = pairs[i][1];
+               }
+           }
+           return res;
+       }
+   }
    ```
 
    
 
-3. 最长摆动子序列--366--Medium
+3. 最长摆动子序列--376--Medium
 
    ```java
-   
+   class Solution {
+       public int wiggleMaxLength(int[] nums) {
+        if (nums == null || nums.length == 0) {
+               return 0;
+           }
+           int up = 1, down = 1;
+           for (int i = 1; i < nums.length; i++) {
+               // 当前位与前一位比较，
+               if (nums[i] > nums[i - 1]) {
+                   up = down + 1;
+               } else if (nums[i] < nums[i - 1]) {
+                   down = up + 1;
+               }
+           }
+           return Math.max(up, down);
+       }
+   }
    ```
-
+   
    
 
 #### 最长公共子序列
