@@ -193,12 +193,18 @@ public class FuntionTest {
 //        Test435 test435 = new Test435();
 //        int[][] test = {{1,2}, {2,3}, {3,4}, {1,3}};
 //        test435.eraseOverlapIntervals(test);
-        Test406 test406 = new Test406();
-        int[][] testArr = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
-        test406.reconstructQueue(testArr);
+//        Test406 test406 = new Test406();
+//        int[][] testArr = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+//        test406.reconstructQueue(testArr);
 
 
+//        Test1143 test1143 = new Test1143();
+//        String text1 = "abcde";
+//        String text2 = "ace";
+//        test1143.longestCommonSubsequence(text1, text2);
 
-
+        Test416 test416 = new Test416();
+        int[] test = {1, 5, 11, 5};
+        boolean f = test416.canPartition(test);
     }
 }

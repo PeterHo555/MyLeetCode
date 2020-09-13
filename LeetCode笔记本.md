@@ -4611,7 +4611,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 动态规划 - 未写15
+### 动态规划 - 未写12
 
 递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
 
@@ -5031,9 +5031,33 @@ http://c.biancheng.net/view/784.html
 1. 最长公共子序列--1143--Medium
 
    ```java
-   //未写
+   //dp方程确实很难整出来，得手写慢慢领悟
+   //测试用例：text1 = "abcde", text2 = "ace"
+//二维dp数组如下：
+   //0 0 0 0
+   //0 1 1 1
+   //0 1 1 1
+   //0 1 2 2
+   //0 1 2 2
+   //0 1 2 3
+   class Solution {
+       public int longestCommonSubsequence(String text1, String text2) {
+           int n1 = text1.length(), n2 = text2.length();
+           int[][] dp = new int[n1 + 1][n2 + 1];
+           for (int i = 1; i <= n1; i++) {
+               for (int j = 1; j <= n2; j++) {
+                   if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                       dp[i][j] = dp[i - 1][j - 1] + 1;
+                   } else {
+                       dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                   }
+               }
+           }
+           return dp[n1][n2];
+       }
+   }
    ```
-
+   
    
 
 #### 0-1背包
@@ -5041,7 +5065,26 @@ http://c.biancheng.net/view/784.html
 1. 划分数组为和相等的两部分--416--Medium
 
    ```java
-   
+   class Solution {
+       public boolean canPartition(int[] nums) {
+           int sum = 0;
+           for (int num : nums) {
+               sum += num;
+           }
+           // 和为奇数必不可分
+           if (sum %2 == 1)
+               return false;
+           int W = sum / 2;
+           boolean[] dp = new boolean[W + 1];
+           dp[0] = true;
+           for (int num : nums) {
+               for (int i = W; i >= num; i--) {  // 从后往前，先计算 dp[i] 再计算 dp[i-num]
+                   dp[i] = dp[i] || dp[i - num];
+               }
+           }
+           return dp[W];
+       }
+   }
    ```
 
    
@@ -5049,7 +5092,41 @@ http://c.biancheng.net/view/784.html
 2. 改变一组数的正负号使得它们的和为一给定数--494--Medium
 
    ```java
+   //动态规划
+   class Solution {
+       public int findTargetSumWays(int[] nums, int S) {
+           int sum = 0;
+           for (int num : nums) {
+               sum += num;
+           }
+           if (sum < S || (sum + S) % 2 == 1) {
+               return 0;
+           }
+           int W = (sum + S) / 2;
+           int[] dp = new int[W + 1];
+           dp[0] = 1;
+           for (int num : nums) {
+               for (int i = W; i >= num; i--) {
+                   dp[i] = dp[i] + dp[i - num];
+               }
+           }
+           return dp[W];
+       }
+   }
    
+   // DFS
+   class Solution {
+       public int findTargetSumWays(int[] nums, int S) {
+           return findTargetSumWays(nums, 0, S);
+       }
+   
+       private int findTargetSumWays(int[] nums, int start, int S) {
+           if (start == nums.length) {
+               return S == 0 ? 1 : 0;
+           }
+           return findTargetSumWays(nums, start + 1, S + nums[start]) + findTargetSumWays(nums, start + 1, S - nums[start]);
+       }
+   }
    ```
 
    
