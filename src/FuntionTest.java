@@ -203,8 +203,12 @@ public class FuntionTest {
 //        String text2 = "ace";
 //        test1143.longestCommonSubsequence(text1, text2);
 
-        Test416 test416 = new Test416();
-        int[] test = {1, 5, 11, 5};
-        boolean f = test416.canPartition(test);
+//        Test416 test416 = new Test416();
+//        int[] test = {1, 5, 11, 5};
+//        boolean f = test416.canPartition(test);
+
+        Test474 test474 = new Test474();
+        String[] strs= {"10", "0001", "111001", "1", "0"};
+        test474.findMaxForm(strs,5,3);
     }
 }
