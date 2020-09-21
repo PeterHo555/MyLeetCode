@@ -207,8 +207,12 @@ public class FuntionTest {
 //        int[] test = {1, 5, 11, 5};
 //        boolean f = test416.canPartition(test);
 
-        Test474 test474 = new Test474();
-        String[] strs= {"10", "0001", "111001", "1", "0"};
-        test474.findMaxForm(strs,5,3);
+//        Test474 test474 = new Test474();
+//        String[] strs= {"10", "0001", "111001", "1", "0"};
+//        test474.findMaxForm(strs,5,3);
+
+        Test322 test322 = new Test322();
+        int[] test = {2};
+        test322.coinChange(test,3);
     }
 }
