@@ -1,3 +1,4 @@
+import java.util.ArrayDeque;
 import java.util.List;
 
 public class FuntionTest {
@@ -210,9 +211,46 @@ public class FuntionTest {
 //        Test474 test474 = new Test474();
 //        String[] strs= {"10", "0001", "111001", "1", "0"};
 //        test474.findMaxForm(strs,5,3);
+//
+//        Test322 test322 = new Test322();
+//        int[] test = {2};
+//        test322.coinChange(test,3);
+//        Test117 test117 = new Test117();
+//        Node root = new Node(1);
+//        root.left = new Node(2);
+//        root.right = new Node(3);
+//        root.left.left = new Node(4);
+//        root.left.right = new Node(5);
+//        root.right.right = new Node(7);
+//        Node temp = root;
+//        ArrayDeque<Node> queue = new ArrayDeque<>(20);
+//        //首先将根节点加入栈中
+//        queue.add(temp);
+//        //遍历二叉树
+//        while (!queue.isEmpty()) {
+//            Node tempNode = queue.poll();
+//            System.out.print(tempNode.val + " ");
+//
+//            if(tempNode.left != null){
+//                queue.add(tempNode.left);
+//            }
+//            if(tempNode.right != null){
+//                queue.add(tempNode.right);
+//            }
+//        }
+//        System.out.println("");
+//        test117.connect(root);
 
-        Test322 test322 = new Test322();
-        int[] test = {2};
-        test322.coinChange(test,3);
+//        Test518 test518 = new Test518();
+//        int amount = 5;
+//        int[] coins =new int[]{1, 2, 5};
+//        test518.change(amount, coins);
+
+        Test123 test123 = new Test123();
+        int[] test = new int[]{3,3,5,0,0,3,1,4};
+        test123.maxProfit(test);
+
+
+
     }
 }

@@ -13,12 +13,12 @@ public class Test322 {
         Arrays.fill(memo,amount+1);
         memo[0] = 0;
         for(int i = 1; i <= amount;i++){
-            for(int j = 0;j < coins.length;j++){
+            for(int j = 0; j < coins.length; j++){
                 if(i - coins[j] >= 0){
                     // memo[i]有两种实现的方式，
                     // 一种是包含当前的coins[i],那么剩余钱就是 i-coins[i],这种操作要兑换的硬币数是 memo[i-coins[j]] + 1
                     // 另一种就是不包含，要兑换的硬币数是memo[i]
-                    memo[i] = Math.min(memo[i],memo[i-coins[j]] + 1);
+                    memo[i] = Math.min(memo[i], memo[i-coins[j]] + 1);
                 }
             }
         }

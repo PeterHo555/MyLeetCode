@@ -2002,7 +2002,7 @@
 
 ---
 
-### 图 - 未写4
+### 图
 
 #### 二分图
 
@@ -4611,7 +4611,7 @@ http://c.biancheng.net/view/784.html
 
 ---
 
-### 动态规划 - 未写12
+### 动态规划 
 
 递归和动态规划都是将原问题拆成多个子问题然后求解，他们之间最本质的区别是，动态规划保存了子问题的解，避免重复计算。
 
@@ -5165,7 +5165,31 @@ http://c.biancheng.net/view/784.html
 4. 找零钱的最少硬币数--322--Medium
 
    ```java
-   
+   class Solution {
+       public int coinChange(int[] coins, int amount) {
+           // 自底向上的动态规划
+           if(coins.length == 0){
+               return -1;
+           }
+           // memo[n]的值： 表示的凑成总金额为n所需的最少的硬币个数
+           int[] memo = new int[amount+1];
+           // 给memo赋初值，最多的硬币数就是全部使用面值1的硬币进行换
+           // amount + 1 是不可能达到的换取数量，于是使用其进行填充
+           Arrays.fill(memo, amount+1);
+           memo[0] = 0;
+           for(int i = 1; i <= amount;i++){
+               for(int j = 0;j < coins.length;j++){
+                   if(i - coins[j] >= 0){
+                       // memo[i]有两种实现的方式，
+                       // 一种是包含当前的coins[i],那么剩余钱就是 i-coins[i],这种操作要兑换的硬币数是 memo[i-coins[j]] + 1
+                       // 另一种就是不包含，要兑换的硬币数是memo[i]
+                       memo[i] = Math.min(memo[i],memo[i-coins[j]] + 1);
+                   }
+               }
+           }
+           return memo[amount] == (amount+1) ? -1 : memo[amount];
+       }
+   }
    ```
 
    
@@ -5173,7 +5197,20 @@ http://c.biancheng.net/view/784.html
 5. 找零钱的硬币数组合--518--Medium
 
    ```java
-   
+   class Solution {
+       public int change(int amount, int[] coins) {
+           if (coins == null) return 0;
+           int dp[] = new int[amount + 1];
+           dp[0] = 1;
+           for (int coin : coins) {
+               System.out.println(coin);
+               for (int i = coin; i <= amount ; i++) {
+                   dp[i] += dp[i - coin];
+               }
+           }
+           return dp[amount];
+       }
+   }
    ```
 
    
@@ -5181,7 +5218,24 @@ http://c.biancheng.net/view/784.html
 6. 字符串按单词列表分割--139--Medium
 
    ```java
-   
+   class Solution {
+       public boolean wordBreak(String s, List<String> wordDict) {
+           // 可以类比于背包问题
+           int n = s.length();
+           // memo[i] 表示 s 中以 i - 1 结尾的字符串是否可被 wordDict 拆分
+           boolean[] memo = new boolean[n + 1];
+           memo[0] = true;
+           for (int i = 1; i <= n; i++) {
+               for (int j = 0; j < i; j++) {
+                   if (memo[j] && wordDict.contains(s.substring(j, i))) {
+                       memo[i] = true;
+                       break;
+                   }
+               }
+           }
+           return memo[n];
+       }
+   }
    ```
 
    
@@ -5189,17 +5243,84 @@ http://c.biancheng.net/view/784.html
 7. 组合总和--377--Medium
 
    ```java
-   
+   // 涉及顺序的完全背包
+   class Solution {
+    public int combinationSum4(int[] nums, int target) {
+           if (nums == null || nums.length == 0) {
+               return 0;
+           }
+           int[] maximum = new int[target + 1];
+           maximum[0] = 1;
+           Arrays.sort(nums);
+           for (int i = 1; i <= target; i++) {
+               for (int j = 0; j < nums.length && nums[j] <= i; j++) {
+                   maximum[i] += maximum[i - nums[j]];
+               }
+           }
+           return maximum[target];
+       }
+   }
    ```
-
+   
    
 
 #### 股票交易
 
 1. 需要冷却期的股票交易--309--Medium
 
+   <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/ffd96b99-8009-487c-8e98-11c9d44ef14f.png" width="300px"> </div><br>
+
    ```java
+   class Solution {
+       public int maxProfit(int[] prices) {
+           if (prices == null || prices.length == 0) {
+               return 0;
+           }
+           int N = prices.length;
+           int[] buy = new int[N];
+           int[] s1 = new int[N];
+           int[] sell = new int[N];
+           int[] s2 = new int[N];
+           s1[0] = buy[0] = -prices[0];
+           sell[0] = s2[0] = 0;
+           for (int i = 1; i < N; i++) {
+               buy[i] = s2[i - 1] - prices[i];
+               s1[i] = Math.max(buy[i - 1], s1[i - 1]);
+               sell[i] = Math.max(buy[i - 1], s1[i - 1]) + prices[i];
+               s2[i] = Math.max(s2[i - 1], sell[i - 1]);
+           }
+           return Math.max(sell[N - 1], s2[N - 1]);
+       }
+   }
    
+   
+   
+   class Solution {
+       public int maxProfit(int[] prices) {
+           if (prices == null || prices.length == 0) {
+               return 0;
+           }
+           //由于可以无限次交易，所以只定义两个维度，第一个维度是天数，第二个维度表示是否持有股票，0表示不持有，1表示持有，2表示过渡期
+           int[][] dp = new int[prices.length][3];
+           dp[0][0] = 0;
+           dp[0][1] = -prices[0];
+           dp[0][2] = 0;
+           for (int i = 1; i < prices.length; i++) {
+               //第i天不持有股票的情况有两种
+               //a.第i-1天也不持有股票
+               //b.第i-1天是过渡期
+               dp[i][0] = Math.max(dp[i-1][0], dp[i-1][2]);
+               //第i天持有股票有两种情况
+               //a.第i-1天也持有股票，第i天不操作，
+               //b.第i-1天不持有股票，在第i天买入
+               dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] - prices[i]);
+               //第i天是冷冻期只有一种情况，第i-1天持有股票且卖出
+               dp[i][2] = dp[i-1][1] + prices[i];
+           }
+           //最后最大利润为最后一天，不持有股票或者进入冷冻期的情况
+           return Math.max(dp[prices.length-1][0], dp[prices.length-1][2]);
+       }
+   }
    ```
 
    
@@ -5207,7 +5328,39 @@ http://c.biancheng.net/view/784.html
 2. 需要交易费用的股票交易--714--Medium
 
    ```java
+   Input: prices = [1, 3, 2, 8, 4, 9], fee = 2
+   Output: 8
+   Explanation: The maximum profit can be achieved by:
+   Buying at prices[0] = 1
+   Selling at prices[3] = 8
+   Buying at prices[4] = 4
+   Selling at prices[5] = 9
+   The total profit is ((8 - 1) - 2) + ((9 - 4) - 2) = 8.
+   ```
+
    
+
+   <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/1e2c588c-72b7-445e-aacb-d55dc8a88c29.png" width="300px"> </div><br>
+
+   ```java
+   class Solution {
+       public int maxProfit(int[] prices, int fee) {
+           int N = prices.length;
+           int[] buy = new int[N];
+           int[] s1 = new int[N];
+           int[] sell = new int[N];
+           int[] s2 = new int[N];
+           s1[0] = buy[0] = -prices[0];
+           sell[0] = s2[0] = 0;
+           for (int i = 1; i < N; i++) {
+               buy[i] = Math.max(sell[i - 1], s2[i - 1]) - prices[i];
+               s1[i] = Math.max(buy[i - 1], s1[i - 1]);
+               sell[i] = Math.max(buy[i - 1], s1[i - 1]) - fee + prices[i];
+               s2[i] = Math.max(s2[i - 1], sell[i - 1]);
+           }
+           return Math.max(sell[N - 1], s2[N - 1]);
+       }
+   }
    ```
 
    
@@ -5215,7 +5368,35 @@ http://c.biancheng.net/view/784.html
 3. 只能进行两次的股票交易--123--Hard
 
    ```java
-   
+   class Solution {
+       public int maxProfit(int[] prices) {
+           // 最多只能两次交易
+           //对于任意一天考虑四个变量:
+           //fstBuy: 在该天第一次买入股票可获得的最大收益
+           //fstSell: 在该天第一次卖出股票可获得的最大收益
+           //secBuy: 在该天第二次买入股票可获得的最大收益
+           //secSell: 在该天第二次卖出股票可获得的最大收益
+           // 分别对四个变量进行相应的更新, 最后secSell就是最大
+           // 收益值(secSell >= fstSell)
+           int firstBuy = Integer.MIN_VALUE, firstSell = 0;
+           int secondBuy = Integer.MIN_VALUE, secondSell = 0;
+           for (int curPrice : prices) {
+               if (firstBuy < -curPrice) {
+                   firstBuy = -curPrice;
+               }
+               if (firstSell < firstBuy + curPrice) {
+                   firstSell = firstBuy + curPrice;
+               }
+               if (secondBuy < firstSell - curPrice) {
+                   secondBuy = firstSell - curPrice;
+               }
+               if (secondSell < secondBuy + curPrice) {
+                   secondSell = secondBuy + curPrice;
+               }
+           }
+           return secondSell;
+       }
+   }
    ```
 
    
@@ -5223,7 +5404,29 @@ http://c.biancheng.net/view/784.html
 4. 只能进行 k 次的股票交易--188--Medium
 
    ```java
-   
+   class Solution {
+       public int maxProfit(int k, int[] prices) {
+           int n = prices.length;
+           if (k >= n / 2) {   // 这种情况下该问题退化为普通的股票交易问题
+               int maxProfit = 0;
+               for (int i = 1; i < n; i++) {
+                   if (prices[i] > prices[i - 1]) {
+                       maxProfit += prices[i] - prices[i - 1];
+                   }
+               }
+               return maxProfit;
+           }
+           int[][] maxProfit = new int[k + 1][n];
+           for (int i = 1; i <= k; i++) {
+               int localMax = maxProfit[i - 1][0] - prices[0];
+               for (int j = 1; j < n; j++) {
+                   maxProfit[i][j] = Math.max(maxProfit[i][j - 1], prices[j] + localMax);
+                   localMax = Math.max(localMax, maxProfit[i - 1][j] - prices[j]);
+               }
+           }
+           return maxProfit[k][n - 1];
+       }
+   }
    ```
 
    
@@ -5249,9 +5452,18 @@ http://c.biancheng.net/view/784.html
 3. 复制粘贴字符--650--Medium
 
    ```java
-   
+   //最开始只有一个字符 A，问需要多少次操作能够得到 n 个字符 A，每次操作可以复制当前所有的字符，或者粘贴。
+   class Solution {
+    public int minSteps(int n) {
+           if (n == 1) return 0;
+           for (int i = 2; i <= Math.sqrt(n); i++) {
+               if (n % i == 0) return i + minSteps(n / i);
+           }
+           return n;
+       }
+   }
    ```
-
+   
    
 
 ---
