@@ -246,9 +246,11 @@ public class FuntionTest {
 //        int[] coins =new int[]{1, 2, 5};
 //        test518.change(amount, coins);
 
-        Test123 test123 = new Test123();
-        int[] test = new int[]{3,3,5,0,0,3,1,4};
-        test123.maxProfit(test);
+//        Test123 test123 = new Test123();
+//        int[] test = new int[]{3,3,5,0,0,3,1,4};
+//        test123.maxProfit(test);
+//        Test583 test583 = new Test583();
+//        test583.minDistance("sea", "eat");
 
 
 
