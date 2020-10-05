@@ -1,6 +1,6 @@
 public class Test236 {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        /**
+         /**
          注意p,q必然存在树内, 且所有节点的值唯一!!!
          递归思想, 对以root为根的(子)树进行查找p和q, 如果root == null || p || q 直接返回root
          表示对于当前树的查找已经完毕, 否则对左右子树进行查找, 根据左右子树的返回值判断:

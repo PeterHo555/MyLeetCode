@@ -1,18 +1,7 @@
 public class Test2 {
-    /**
-     * Definition for singly-linked list.
-     * public class ListNode {
-     *     int val;
-     *     ListNode next;
-     *     ListNode(int x) { val = x; }
-     * }
-     */
-    public class ListNode {
-         int val;
-         ListNode next;
-         ListNode(int x) { val = x; }
-    }
+
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        // 计算后节点前插
         ListNode root = new ListNode(0);
         ListNode cursor = root;
         long x1 = 0, x2 = 0;
