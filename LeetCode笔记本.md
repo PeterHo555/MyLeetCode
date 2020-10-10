@@ -2720,17 +2720,37 @@ http://c.biancheng.net/view/784.html
    class Solution {
        public boolean hasCycle(ListNode head) {
            if (head == null) {
-           return false;
-       }
-       ListNode l1 = head, l2 = head.next;
-       while (l1 != null && l2 != null && l2.next != null) {
-           if (l1 == l2) {
-               return true;
-           }
-           l1 = l1.next;
-           l2 = l2.next.next;
-       }
+           		return false;
+       		}
+       		ListNode l1 = head, l2 = head.next;
+       		while (l1 != null && l2 != null && l2.next != null) {
+               if (l1 == l2) {
+                   return true;
+               }
+               l1 = l1.next;
+               l2 = l2.next.next;
+       		}
        return false;
+       }
+   }
+   // 双指针 一样的思路
+   class Solution {
+       public boolean hasCycle(ListNode head) {
+           // 快慢指针。若有循环，指针必然相遇
+           // 若无循环，指针必有指为null的情况，此时跳出循环，return false
+           ListNode slow = head;
+           ListNode fast = head;
+           while(fast != null) {
+               fast = fast.next;
+               if(fast != null) {
+                   fast = fast.next;
+               }
+               if(fast == slow) {
+                   return true;
+               }
+               slow = slow.next;
+           }
+           return false;
        }
    }
    ```
@@ -6011,7 +6031,7 @@ x 和 y 的最小公倍数为：lcm(x,y) =  2<sup>max(m0,n0)</sup> \* 3<sup>max(
            int[] ans = new int[n];
            Arrays.fill(ans, 1);
            for(int i=0;i<n;++i){
-               //最终每个元素其左右乘积进行相乘得出结果
+               // 最终每个元素其左右乘积进行相乘得出结果
                ans[i] *= left;       //乘以其左边的乘积
                left *= nums[i];
                ans[n - 1 - i] *= right;  //乘以其右边的乘积
