@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 public class Test530 {
     private int minDiff = Integer.MAX_VALUE;
     private TreeNode preNode = null;
@@ -14,5 +17,23 @@ public class Test530 {
             minDiff = Math.min(minDiff, node.val - preNode.val);
         preNode = node;
         inOrder(node.right);
+    }
+
+    // 这个是任意相邻两点的最小值，用的层次遍历
+    public int getMinimumDifference2(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        while (!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if (node.left != null){
+                minDiff = Math.min(minDiff, Math.abs(node.val - node.left.val));
+                queue.add(node.left);
+            }
+            if (node.right != null){
+                minDiff = Math.min(minDiff, Math.abs(node.val - node.right.val));
+                queue.add(node.right);
+            }
+        }
+        return minDiff;
     }
 }
