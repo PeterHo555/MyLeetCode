@@ -8,7 +8,7 @@ public class Test977 {
 //        }
 //        Arrays.sort(A);
 //        return A;
-        
+
         // 双指针
         int len = A.length;
         int[] ans = new int[len];

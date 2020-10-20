@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 public class Test844 {
     public boolean backspaceCompare(String S, String T) {
         if (S == null || T == null) return false;
@@ -20,4 +22,27 @@ public class Test844 {
         }
         return sb.toString();
     }
+//    public boolean backspaceCompare(String S, String T) {
+//        Stack<Character> stack1 = new Stack<>();
+//        Stack<Character> stack2 = new Stack<>();
+//        for(int i = 0; i < S.length(); i++){
+//            if(!stack1.isEmpty() && S.charAt(i) == '#'){
+//                stack1.pop();
+//            }else if(S.charAt(i) != '#'){
+//                stack1.push(S.charAt(i));
+//            }
+//        }
+//        for(int j = 0; j < T.length(); j++){
+//            if(!stack2.isEmpty() && T.charAt(j) == '#'){
+//                stack2.pop();
+//            }else if(T.charAt(j) != '#'){
+//                stack2.push(T.charAt(j));
+//            }
+//        }
+//        if(stack1.size() != stack2.size() ) return false;
+//        while(!stack1.isEmpty()){
+//            if(stack1.pop() != stack2.pop()) return false;
+//        }
+//        return true;
+//    }
 }

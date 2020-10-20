@@ -1,5 +1,6 @@
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Stack;
 
 public class FuntionTest {
     public static void main(String[] args) {
@@ -251,7 +252,9 @@ public class FuntionTest {
 //        test123.maxProfit(test);
 //        Test583 test583 = new Test583();
 //        test583.minDistance("sea", "eat");
+        Test844 test844 = new Test844();
 
+        test844.backspaceCompare("y#fo##f","y#f#o##f");
 
 
     }
