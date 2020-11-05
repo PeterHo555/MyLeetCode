@@ -16,6 +16,7 @@ public class Test349 {
         //将hashSet转成数组形式
         int[] ans = new int[hashSet2.size()];
         int i = 0;
+
         for (int temp: hashSet2) {
             ans[i++]=temp;
         }

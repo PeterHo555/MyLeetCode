@@ -6,5 +6,4 @@ public class Test100 {
             return false;
         return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
-
 }
