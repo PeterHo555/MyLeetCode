@@ -13,7 +13,7 @@ public class Test113 {
         if (root == null)
             return;
         //把当前节点值加入到list中
-        list.add(new Integer(root.val));
+        list.add(root.val);
         //没往下走一步就要计算走过的路径和
         toal += root.val;
         //如果到达叶子节点，就不能往下走了，直接return

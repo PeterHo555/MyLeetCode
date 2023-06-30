@@ -1,5 +1,3 @@
-import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
-
 public class Test37 {
     private boolean[][] rowsUsed = new boolean[9][10];
     private boolean[][] colsUsed = new boolean[9][10];

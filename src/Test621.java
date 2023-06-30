@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Test621 {
     public int leastInterval(char[] tasks, int n) {
         int[] count = new int[26];
